@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "472886095921",
+    "project_id": "uas-koskosan-kelompok5",
+    "storage_bucket": "uas-koskosan-kelompok5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472886095921:android:428ee4dcebfe80c34b6510",
+        "android_client_info": {
+          "package_name": "com.example.uas_koskosan_kelompok5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-k-7IL4PNwXklELb5m1qW67BtPXd-pbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

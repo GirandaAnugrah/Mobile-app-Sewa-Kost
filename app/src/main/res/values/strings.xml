@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">UAS_KosKosan_Kelompok5</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_field">Email</string>
+    <string name="username_field">Username</string>
+    <string name="password_field">Password</string>
+    <string name="confirm_field">Confirm Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+
+    <string name="blank_field">Field Cannot Blank</string>
+</resources>
