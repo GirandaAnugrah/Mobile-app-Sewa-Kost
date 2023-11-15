@@ -1,6 +1,5 @@
 package com.example.uas_koskosan_kelompok5.view
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,21 +14,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.uas_koskosan_kelompok5.model.UserModel
-import com.example.uas_koskosan_kelompok5.navigation.ROUTE_HOME
-import com.example.uas_koskosan_kelompok5.navigation.Screen
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.util.Log
+import android.widget.Space
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.res.stringResource
+import com.example.uas_koskosan_kelompok5.R
+import com.example.uas_koskosan_kelompok5.handleImage.LoadImage
 
 @Composable
 fun ProfileView(
-    navController: NavController, firebaseUser: FirebaseUser?,onRefresh: () -> Unit
+    navController: NavController, firebaseUser: FirebaseUser?,onRefresh: () -> Unit,onCreateNewContent: () -> Unit
 ) {
+    val isSellerArray = firebaseUser?.displayName?.split(" ")
+    val isSeller = isSellerArray!![isSellerArray.size - 1] == stringResource(id = R.string.isSeller)
+
 //    searchuser(firebaseUser)
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -41,10 +47,19 @@ fun ProfileView(
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp)
         ) {
-            Text("Profile Screen",)
+
+            firebaseUser?.photoUrl?.let { LoadImage(url = it.toString(),null) }
+            firebaseUser?.displayName?.let { Text(it) }
+            firebaseUser?.email?.let { Text(it) }
+            
+            Text(text = isSeller.toString())
 
             Button(onClick = { onRefresh() }) {
                 Text(text = "Logout")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { onCreateNewContent() }) {
+                Text(text = "Create New Content")
             }
         }
     }
