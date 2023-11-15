@@ -2,6 +2,7 @@ package com.example.uas_koskosan_kelompok5
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,12 +16,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,10 +36,12 @@ import com.example.uas_koskosan_kelompok5.navigation.ROUTE_LOGIN
 import com.example.uas_koskosan_kelompok5.navigation.ROUTE_SIGNUP
 import com.example.uas_koskosan_kelompok5.view.auth.LoginScreen
 import com.example.uas_koskosan_kelompok5.view.auth.SignUpScreen
+import com.example.uas_koskosan_kelompok5.viewmodel.AuthViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -43,13 +49,17 @@ class AuthenticationActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance()
 
+
+
     private var TAG = "Authentication"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Initialize Firebase Auth
         auth = Firebase.auth
+
         setContent {
             UAS_KosKosan_Kelompok5Theme {
+                val authViewModel = viewModel<AuthViewModel>()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -60,7 +70,6 @@ class AuthenticationActivity : ComponentActivity() {
             }
         }
     }
-
 
 
     @Composable
@@ -108,26 +117,31 @@ class AuthenticationActivity : ComponentActivity() {
 
 
      private fun signUp(username: String, email:String,password:String,isSeller: Boolean,error: (errorMessage:String?) -> Unit){
-
+         var username = username
+         if(isSeller){
+             username = "$username ${getString(R.string.isSeller)}"
+         }else{
+             username = "$username ${getString(R.string.isUser)}"
+         }
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-//                    val profileUpdate = UserProfileChangeRequest.Builder()
-//                        .setDisplayName(username)
-//                        .build()
-//
-//                    user?.updateProfile(profileUpdate)
+                    val profileUpdate = UserProfileChangeRequest.Builder()
+                        .setDisplayName(username)
+                        .setPhotoUri(Uri.parse("https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"))
+                        .build()
+                    user?.updateProfile(profileUpdate)
 
-                    val userIntoDatabase = UserModel(username,email,isSeller)
-                    val pushData = database.reference.child("users").child(user!!.uid).push()
-                    pushData.setValue(userIntoDatabase).addOnCompleteListener(this){task ->
-                        if(task.isSuccessful){
-                            Toast.makeText(baseContext,"Insert data into firebase success",Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(baseContext,"Insert data into firebase is not success",Toast.LENGTH_SHORT).show()
-                        }
-                    }
+//                    val userIntoDatabase = UserModel(username,email,isSeller)
+//                    val pushData = database.reference.child("users").child(user!!.uid).push()
+//                    pushData.setValue(userIntoDatabase).addOnCompleteListener(this){task ->
+//                        if(task.isSuccessful){
+//                            Toast.makeText(baseContext,"Insert data into firebase success",Toast.LENGTH_SHORT).show()
+//                        }else{
+//                            Toast.makeText(baseContext,"Insert data into firebase is not success",Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
 
                     updateUI(user)
                 } else {

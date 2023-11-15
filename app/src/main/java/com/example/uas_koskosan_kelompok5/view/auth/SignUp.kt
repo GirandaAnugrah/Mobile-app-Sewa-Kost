@@ -22,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uas_koskosan_kelompok5.R
 import com.example.uas_koskosan_kelompok5.navigation.ROUTE_LOGIN
 import com.example.uas_koskosan_kelompok5.navigation.ROUTE_SIGNUP
 import com.example.uas_koskosan_kelompok5.ui.theme.UAS_KosKosan_Kelompok5Theme
+import com.example.uas_koskosan_kelompok5.viewmodel.AuthViewModel
 import java.util.regex.Pattern
 
 
@@ -38,6 +40,8 @@ fun SignUpScreen(
     onSignUp: (username : String?, email : String?, password : String?, isSeller: Boolean) -> Unit,
     error: String?
 ) {
+    val authViewModel = viewModel<AuthViewModel>()
+
     var username by remember { mutableStateOf("") }
     var isUsernameError by remember { mutableStateOf(false) }
     var messageusernameError by remember { mutableStateOf("") }

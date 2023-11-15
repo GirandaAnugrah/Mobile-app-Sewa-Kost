@@ -63,6 +63,7 @@ import com.google.firebase.database.ValueEventListener
 
 class MainActivity : ComponentActivity() {
     private var currentUser = Firebase.auth.currentUser
+
     private val database = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         var authenticationIntent = Intent(this, AuthenticationActivity::class.java)
@@ -204,6 +205,8 @@ class MainActivity : ComponentActivity() {
                     if(currentUser !== null){
                         ProfileView(navController = navController,currentUser, onRefresh = {
                             refreshActivity()
+                        }, onCreateNewContent = {
+                            intoServiceActivity()
                         })
                     }else{
                         ProfileViewUserNotLogin(auth)
@@ -220,6 +223,11 @@ class MainActivity : ComponentActivity() {
         val intent = getIntent()
         Firebase.auth.signOut()
         finish()
+        startActivity(intent)
+    }
+
+    private fun intoServiceActivity() {
+        val intent = Intent(this, ServiceActivity::class.java)
         startActivity(intent)
     }
 

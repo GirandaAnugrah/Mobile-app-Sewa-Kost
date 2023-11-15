@@ -9,6 +9,24 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
+    <string name="isSeller">(Seller)</string>
+    <string name="isUser">(User)</string>
+    <string name="submit">Submit</string>
+
+    <string name="content_title">Title</string>
+    <string name="content_description">Description</string>
+    <string name="content_facility">Room Facility</string>
+    <string name="room">Room</string>
+    <string name="electricity">Electricity</string>
+    <string name="bed">Bed</string>
+    <string name="ac">AC</string>
+    <string name="cupboard">Cupboard</string>
+    <string name="pillow">Pillow</string>
+    <string name="bathroom">Bathroom</string>
+
+    <string name="wifi">Wifi</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="guard">Guard</string>
 
     <string name="blank_field">Field Cannot Blank</string>
 </resources>
