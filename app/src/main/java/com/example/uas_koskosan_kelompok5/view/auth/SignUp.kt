@@ -1,14 +1,20 @@
 package com.example.uas_koskosan_kelompok5.view.auth
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -19,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -59,7 +66,12 @@ fun SignUpScreen(
     var isSeller by remember { mutableStateOf(false) }
 
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         TextField(value = username,
             onValueChange = {
@@ -69,7 +81,12 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.username_field))
             },
-            isError = isUsernameError)
+            isError = isUsernameError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
+                .clip(MaterialTheme.shapes.small))
         if (isUsernameError){
             Text(text = messageusernameError)
         }
@@ -82,7 +99,13 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.email_field))
             },
-            isError = isEmailError)
+            isError = isEmailError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
+                .clip(MaterialTheme.shapes.small)
+        )
         if(error!!.isNotBlank()){
             error?.let {
                 Text(text = it)
@@ -93,7 +116,8 @@ fun SignUpScreen(
         }
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             Checkbox(
                 checked = isSeller,
@@ -104,7 +128,7 @@ fun SignUpScreen(
                 )
             )
             Text(
-                text = "Do you want to be seller",
+                text = "Do you want to be a seller",
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
@@ -117,7 +141,12 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.password_field))
             },
-            isError = isErrorPassword)
+            isError = isErrorPassword,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
+                .clip(MaterialTheme.shapes.small))
         if (isErrorPassword){
             Text(text = messagepasswordNotSame)
         }
@@ -130,7 +159,12 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.confirm_field))
             },
-            isError = isErrorPassword)
+            isError = isErrorPassword,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
+                .clip(MaterialTheme.shapes.small))
         if (isErrorPassword){
             Text(text = messagepasswordNotSame)
         }
@@ -161,18 +195,22 @@ fun SignUpScreen(
             }else{
                 onSignUp(username,email, password,isSeller)
             }
-        }
+        },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)
+                .height(56.dp)
         ) {
             Text(text = stringResource(id = R.string.login))
         }
 
-        Row {
-            Text(text = "Not Registered")
-            Text(text = stringResource(id = R.string.sign_in),
-                modifier = Modifier.clickable {
-                    navController.navigate(ROUTE_LOGIN)
-                })
-        }
+//        Row {
+//            Text(text = "Not Registered")
+//            Text(text = stringResource(id = R.string.sign_in),
+//                modifier = Modifier.clickable {
+//                    navController.navigate(ROUTE_LOGIN)
+//                })
+//        }
     }
 
 }
