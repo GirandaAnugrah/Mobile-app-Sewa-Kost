@@ -5,4 +5,5 @@ sealed class Screen(val route: String){
     object ChatScreen: Screen("chat_screen")
     object BookmarkScreen: Screen("bookmark_screen")
     object ProfileScreen: Screen("profile_screen")
+    object DetailsScreen: Screen("content_details/{id}")
 }

@@ -53,7 +53,7 @@ import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun UploadScreen(
+fun UpdateContent(
     state: ContentState,
     viewModel: ContentViewModel,
     onSubmitContent: () -> Unit
@@ -94,16 +94,16 @@ fun UploadScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = stringResource(id = R.string.content_facility))
-        
-        ListFacilities(viewModel = viewModel,state = state)
+
+        ListFacilitiesUpdate(viewModel = viewModel,state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        AddressScreen(viewModel = viewModel, state = state)
+        AddressScreenUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        TelpScreen(viewModel = viewModel, state = state)
+        TelpScreenUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        PriceScreen(viewModel = viewModel, state = state)
+        PriceScreenUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        DropdownMenuExample(viewModel = viewModel)
+        DropdownMenuExampleUpdate(viewModel = viewModel)
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
@@ -145,7 +145,7 @@ fun UploadScreen(
 
 
 @Composable
-fun ListFacilities(viewModel: ContentViewModel,state: ContentState) {
+fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
     var check = viewModel.checkboxItems
     var listRoomFacility by remember {
         mutableStateOf(check.toMutableList())
@@ -154,90 +154,90 @@ fun ListFacilities(viewModel: ContentViewModel,state: ContentState) {
 //    val checkboxItems = viewModel.checkboxItems
 
     Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Electricity")
-                        Checkbox(
-                            checked = state.electricity ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onElectricityChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Bed")
-                        Checkbox(
-                            checked = state.bed ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onBedChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Desk")
-                        Checkbox(
-                            checked = state.desk ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onDeskChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Cupboard")
-                        Checkbox(
-                            checked = state.cupboard ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onCupboardChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Pillow")
-                    Checkbox(
-                        checked = state.pillow ,
-                        onCheckedChange = { newCheckState ->
-                            viewModel.onPillowChange(newCheckState)
-                        }
-                    )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Chair")
-                    Checkbox(
-                        checked = state.chair ,
-                        onCheckedChange = { newCheckState ->
-                            viewModel.onChairChange(newCheckState)
-                        }
-                    )
-                }
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Electricity")
+                Checkbox(
+                    checked = state.electricity ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onElectricityChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Bed")
+                Checkbox(
+                    checked = state.bed ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onBedChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Desk")
+                Checkbox(
+                    checked = state.desk ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onDeskChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Cupboard")
+                Checkbox(
+                    checked = state.cupboard ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onCupboardChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Pillow")
+                Checkbox(
+                    checked = state.pillow ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onPillowChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Text(text = "Chair")
+                Checkbox(
+                    checked = state.chair ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onChairChange(newCheckState)
+                    }
+                )
+            }
+        )
 
     }
 }
@@ -247,18 +247,18 @@ fun ListFacilities(viewModel: ContentViewModel,state: ContentState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddressScreen(viewModel: ContentViewModel,state: ContentState) {
+fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
         label = {
             Text(text = "Address")
-    })
+        })
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
+fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
         label = {
@@ -268,7 +268,7 @@ fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PriceScreen(viewModel: ContentViewModel,state: ContentState) {
+fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -278,7 +278,7 @@ fun PriceScreen(viewModel: ContentViewModel,state: ContentState) {
 }
 
 @Composable
-fun DropdownMenuExample(viewModel: ContentViewModel) {
+fun DropdownMenuExampleUpdate(viewModel: ContentViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf("Select Item") }
     val items = listOf("Wanita", "Laki-Laki", "Campuran")
@@ -311,7 +311,7 @@ fun DropdownMenuExample(viewModel: ContentViewModel) {
                         expanded = false
                     },
                     text = { Text(text = item) }
-                ) 
+                )
             }
         }
     }
