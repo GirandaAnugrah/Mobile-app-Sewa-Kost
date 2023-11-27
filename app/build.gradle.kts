@@ -90,12 +90,14 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
-    implementation("io.coil-kt:coil-compose:1.3.0")
+//    implementation("io.coil-kt:coil-compose:1.3.0")
 
 
 //    Grid
     implementation("com.google.accompanist:accompanist-pager:0.23.0")
 
+//    Async image
+    implementation("io.coil-kt:coil-compose:2.3.0")
 
 
 }

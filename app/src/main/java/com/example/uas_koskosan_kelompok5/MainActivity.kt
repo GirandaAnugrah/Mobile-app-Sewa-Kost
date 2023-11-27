@@ -1,7 +1,6 @@
 package com.example.uas_koskosan_kelompok5
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager.Query
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -41,8 +40,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.uas_koskosan_kelompok5.navigation.Screen
@@ -55,17 +52,30 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
+import com.example.uas_koskosan_kelompok5.firebaseService.FirebaseRealtimeService
+import com.example.uas_koskosan_kelompok5.firebaseService.FirebaseStorageService
+import com.example.uas_koskosan_kelompok5.model.ContentData
+import com.example.uas_koskosan_kelompok5.model.ContentModel
+import com.example.uas_koskosan_kelompok5.service.ContentService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import android.util.Log
-import com.example.uas_koskosan_kelompok5.model.UserModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.example.uas_koskosan_kelompok5.view.content.DetailsScreen
 
 class MainActivity : ComponentActivity() {
     private var currentUser = Firebase.auth.currentUser
 
     private val database = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
+        val contentService = ContentService(FirebaseRealtimeService, FirebaseStorageService)
         var authenticationIntent = Intent(this, AuthenticationActivity::class.java)
         FirebaseApp.initializeApp(this)
 //        searchuser(currentUser)
@@ -77,30 +87,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DashBoardDefaut(currentUser,authenticationIntent)
+                    DashBoardDefaut(currentUser,authenticationIntent,contentService)
                 }
             }
         }
     }
-
-//    private fun searchuser(currentUser: FirebaseUser?){
-//        val query = database.reference.child("users").child(currentUser!!.uid).child("email").equalTo(currentUser.email)
-//        query.addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // Handle the data here
-//                for (userSnapshot in dataSnapshot.children) {
-//                    val user = userSnapshot.getValue(UserModel::class.java)
-//                    Log.d("CURRENTUSER",user.toString())
-//                    // Do something with the user object
-//                }
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Handle errors
-//                Log.d("CURRENTUSER_ERROR",databaseError.message)
-//            }
-//        })
-//    }
 
     data class BottomNavigationItem(
         val title: String,
@@ -114,8 +105,14 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
     @Composable
-    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent) {
+    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent, contentService: ContentService) {
         val navController = rememberNavController()
+
+//        var contentsData by remember { mutableStateOf<List<ContentModel>?>(null) }
+        val contentsData = remember { mutableStateOf<List<ContentModel>>(emptyList()) }
+
+        var contentData by remember { mutableStateOf<ContentModel?>(null) }
+
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(Screen.HomeScreen.route)
         }
@@ -191,7 +188,33 @@ class MainActivity : ComponentActivity() {
         ){
             NavHost(navController = navController, startDestination = Screen.HomeScreen.route){
                 composable(route = Screen.HomeScreen.route){
-                    HomeView(navController = navController)
+                    LaunchedEffect(contentData) {
+                        contentService.getData(contentsData)
+                    }
+                    HomeView(navController = navController,contentsData.value,
+                        navigateToDetails = {id ->
+                            lifecycleScope.launch {
+                                try {
+                                    val result = contentService.getContentById(id)
+                                    if (result.data == null) {
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Item Not FOund",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        navController.navigate(Screen.HomeScreen.route)
+                                    } else {
+                                        Log.d("DETAILCONTENT","Parsing data")
+                                        contentData = result.data
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("DETAILS", e.toString())
+                                }
+                                if(contentData != null) {
+                                    navController.navigate("content_detail/${id}")
+                                }
+                            }
+                        })
                 }
                 composable(route = Screen.ChatScreen.route){
 //                ChatView(navController = navController)
@@ -212,11 +235,82 @@ class MainActivity : ComponentActivity() {
                         ProfileViewUserNotLogin(auth)
                     }
                 }
+                composable(route = "content_detail/{id}",
+                    arguments = listOf(
+                        navArgument("id") {
+                            type = NavType.StringType
+                        }
+                    )){
+                    Log.d("DETAILCONTENT","MASUK DETAIL CONTENT")
 
+                    contentData?.let { it1 -> DetailsScreen(item = it1,
+                        deleteContent = {id ->
+                            lifecycleScope.launch {
+                                try {
+                                    contentService.deleteContent(id)
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Delete Data Successfully",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    navController.navigate(Screen.HomeScreen.route)
+                                }catch (e: Exception){
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Cannot Delete Data",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        },
+                        updateContent = {id ->
+                            lifecycleScope.launch {
+                                intoServiceActivityUpdate(id)
+//                                try {
+//                                    val result = contentService.getContentById(id)
+//                                    if (result.data == null) {
+//                                        Toast.makeText(
+//                                            applicationContext,
+//                                            "Item Not Found",
+//                                            Toast.LENGTH_LONG
+//                                        ).show()
+//                                        navController.navigate(Screen.HomeScreen.route)
+//                                    } else {
+//                                        Log.d("DETAILCONTENT","Parsing data")
+//                                        contentData = result.data
+//                                    }
+//                                }catch (e: Exception){
+//                                    Toast.makeText(
+//                                        applicationContext,
+//                                        "Something went wrong error 400",
+//                                        Toast.LENGTH_LONG
+//                                    ).show()
+//                                }
+//                                if(contentData != null) {
+//                                    navController.navigate("update/${id}")
+//                                }
+                            }
+                        })
+                    }
+                }
+                composable(route = "update/{id}",
+                    arguments = listOf(
+                        navArgument("id") {
+                            type = NavType.StringType
+                        }
+                    )){
+
+
+//                    BookmarkView()
+//                mainScreen(navController)
+                }
             }
 
         }
     }
+
+
+
 
 
     private fun refreshActivity() {
@@ -228,6 +322,13 @@ class MainActivity : ComponentActivity() {
 
     private fun intoServiceActivity() {
         val intent = Intent(this, ServiceActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun intoServiceActivityUpdate(id: String) {
+        val intent = Intent(this, ServiceActivity::class.java)
+        intent.putExtra("ID",id)
+//        intent.putExtra("ISUPDATE", true)
         startActivity(intent)
     }
 
