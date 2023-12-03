@@ -9,7 +9,7 @@ data class ContentState(
     val title: String? = "",
     val address: String? = "",
     val type: String? = "",
-    val price: Int? = 0,
+    val price: String? = "",
     val telp: String? = "",
     val electricity: Boolean = false,
     val bed: Boolean = false,
@@ -20,6 +20,7 @@ data class ContentState(
     val facilities: List<CheckBoxItems>? = emptyList(),
     val description: String? = "",
     val images: List<Uri>? = emptyList(),
+    val imagesUpdate: List<String>? = emptyList(),
     val isCreatePostSuccessful : Boolean = false,
     val errorMessage : String?= "",
 )

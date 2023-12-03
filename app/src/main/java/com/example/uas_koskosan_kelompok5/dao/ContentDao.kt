@@ -14,4 +14,5 @@ interface ContentDao {
     suspend fun getContentById(id: String): ContentData
 
     suspend fun deleteContent(id: String): Boolean
+    suspend fun updateContent(id: String, content: ContentModel): ContentModel
 }

@@ -129,7 +129,7 @@ class AuthenticationActivity : ComponentActivity() {
                     val user = auth.currentUser
                     val profileUpdate = UserProfileChangeRequest.Builder()
                         .setDisplayName(username)
-                        .setPhotoUri(Uri.parse("https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"))
+                        .setPhotoUri(Uri.parse("https://firebasestorage.googleapis.com/v0/b/uas-koskosan-kelompok5.appspot.com/o/images%2F36428413-5006-4838-a7ce-dc29b823adea.png?alt=media&token=029fac05-2476-4a4b-835b-47643e145701"))
                         .build()
                     user?.updateProfile(profileUpdate)
 
