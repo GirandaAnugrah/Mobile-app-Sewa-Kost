@@ -2,6 +2,7 @@ package com.example.uas_koskosan_kelompok5.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ fun HomeView(navController: NavController, contentModel: List<ContentModel>, nav
     Column {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), // Jumlah kolom dalam grid (misalnya 3)
+            modifier = Modifier.padding(12.dp)
         ) {
             itemsIndexed(contentModel) {index, item ->
 
@@ -36,7 +38,6 @@ fun HomeView(navController: NavController, contentModel: List<ContentModel>, nav
                     navigateToDetails(it4 ?: "")
                 }
                 } } } } }
-
             }
         }
     }

@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -125,11 +126,17 @@ fun DetailsScreen(item: ContentModel,
                 )
             }
             if(firebaseUser?.uid == item.userId){
-                Row {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Button(
                         onClick = {
                             question = true
                         },
+                        modifier = Modifier
+                            .padding(end = 8.dp)
                     ) {
                         Text(
                             text = "Delete",
@@ -210,7 +217,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    imageVector = Icons.Default.Star,
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit

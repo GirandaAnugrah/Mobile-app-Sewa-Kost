@@ -49,6 +49,8 @@ import androidx.compose.runtime.LaunchedEffect
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
 
 
@@ -66,7 +68,10 @@ fun UpdateContent(
     val scrollState = rememberScrollState()
     var title by remember { mutableStateOf(state.title) }
     Column(
-        modifier = Modifier.verticalScroll(enabled = true, state = scrollState)
+        modifier = Modifier
+            .verticalScroll(enabled = true, state = scrollState)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val multiplePhotoPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
@@ -101,10 +106,19 @@ fun UpdateContent(
             },
             label = {
                 Text(text = stringResource(id = R.string.content_title))
-            })
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
+            )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = stringResource(id = R.string.content_facility))
+        Text(
+            text = stringResource(id = R.string.content_facility),
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Start
+        )
 
         ListFacilitiesUpdate(viewModel = viewModel,state = state)
         Spacer(modifier = Modifier.height(16.dp))
@@ -144,16 +158,17 @@ fun UpdateContent(
         Button(onClick = {
             isLoading = true
             onSubmitContent()
-        }) {
-            Text(text = stringResource(id = R.string.submit))
+        },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.submit),
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp)
         }
-
-
     }
-
-
 }
-
 
 @Composable
 fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
@@ -253,25 +268,25 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
         label = {
             Text(text = "Address")
         })
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
         label = {
             Text(text = "Contacts")
         })
@@ -284,6 +299,8 @@ fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier
+            .fillMaxWidth(),
         label = {
             Text(text = "Price")
         })
@@ -300,7 +317,6 @@ fun DropdownMenuExampleUpdate(viewModel: ContentViewModel,state: ContentState) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     ) {
         Box(
             modifier = Modifier
