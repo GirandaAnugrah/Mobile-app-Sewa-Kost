@@ -42,7 +42,11 @@ class ContentService(firebase: FirebaseRealtimeService, firebaseStorage: Firebas
                 ref.setValue(data).await()
                 return ContentData(data = data)
             }else {
-                val data = model.copy(id = ref.key, userId = userid)
+                val data = model.copy(
+                    id = ref.key,
+                    userId = userid,
+                    images = listOf("https://firebasestorage.googleapis.com/v0/b/uas-koskosan-kelompok5.appspot.com/o/images%2F8bacd7dd-47bd-4370-ae5d-bd0f7fee6ea7.jpg?alt=media&token=73b3103c-ac42-4052-af36-bfeae27f9e7e")
+                )
                 ref.setValue(data).await()
                 return ContentData(data = data)
             }
@@ -88,11 +92,22 @@ class ContentService(firebase: FirebaseRealtimeService, firebaseStorage: Firebas
             ContentData(data = null, errorMessage = e.message)
         }
     }
+    override suspend fun updateContent(id: String, content: ContentModel): ContentModel {
+        try {
+            val ref = database.child(id)
+            val data = content.copy(id = id)
+            ref.setValue(data).await()
+            return data
+        } catch (e: Exception) {
+            throw e
+        }
+
+    }
 
     override suspend fun deleteContent(id: String): Boolean {
         return try {
-            val carReference = database.child(id)
-            carReference.removeValue().await()
+            val ref = database.child(id)
+            ref.removeValue().await()
             true
         } catch (e: Exception) {
             throw e

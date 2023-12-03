@@ -51,6 +51,10 @@ class ContentViewModel: ViewModel() {
         _state.update { it.copy(images = images ?: emptyList()) }
     }
 
+    fun onImagesChangeFromUpdate(images: List<String>?){
+        _state.update { it.copy(imagesUpdate = images ?: emptyList()) }
+    }
+
     fun onAddressChange(param: String?){
         _state.update { it.copy(address = param ?: " ") }
     }
@@ -63,7 +67,7 @@ class ContentViewModel: ViewModel() {
         _state.update { it.copy(telp = param ?: " ") }
     }
     fun onPriceChange(param: String?){
-        _state.update { it.copy(price = param?.toInt() ?: 0) }
+        _state.update { it.copy(price = param ?: "") }
     }
 
     fun resetState() {

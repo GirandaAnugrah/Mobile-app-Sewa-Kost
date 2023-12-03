@@ -244,6 +244,7 @@ class MainActivity : ComponentActivity() {
                     Log.d("DETAILCONTENT","MASUK DETAIL CONTENT")
 
                     contentData?.let { it1 -> DetailsScreen(item = it1,
+                        firebaseUser = currentUser,
                         deleteContent = {id ->
                             lifecycleScope.launch {
                                 try {

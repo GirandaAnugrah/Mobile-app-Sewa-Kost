@@ -45,6 +45,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.LaunchedEffect
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
@@ -58,10 +59,12 @@ fun UpdateContent(
     viewModel: ContentViewModel,
     onSubmitContent: () -> Unit
 ) {
+
     var isLoading by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
+    var title by remember { mutableStateOf(state.title) }
     Column(
         modifier = Modifier.verticalScroll(enabled = true, state = scrollState)
     ) {
@@ -77,6 +80,14 @@ fun UpdateContent(
             }
 
         }
+        if (state.images?.isEmpty() == true){
+            LazyRow{
+                items(state.imagesUpdate ?: emptyList()){link ->
+                    AsyncImage(model = link, contentDescription = null, modifier = Modifier.size(248.dp))
+                }
+            }
+        }
+
         Button(onClick = {
             multiplePhotoPicker.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -84,7 +95,7 @@ fun UpdateContent(
         }) {
             Text("Pick Multiple Images")
         }
-        TextField(value = state.title.orEmpty(),
+        TextField(value = title.toString() ?: "",
             onValueChange = {title ->
                 viewModel.onTitleChange(title)
             },
@@ -103,7 +114,7 @@ fun UpdateContent(
         Spacer(modifier = Modifier.height(16.dp))
         PriceScreenUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        DropdownMenuExampleUpdate(viewModel = viewModel)
+        DropdownMenuExampleUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
@@ -269,6 +280,7 @@ fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
+//    var price by remember { mutableStateOf(0.0) }
     TextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -278,11 +290,13 @@ fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 }
 
 @Composable
-fun DropdownMenuExampleUpdate(viewModel: ContentViewModel) {
+fun DropdownMenuExampleUpdate(viewModel: ContentViewModel,state: ContentState) {
     var expanded by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf("Select Item") }
+    var text by remember { mutableStateOf("Selected Items") }
     val items = listOf("Wanita", "Laki-Laki", "Campuran")
-
+    LaunchedEffect(state.type) {
+        text = state.type ?: ""
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -295,7 +309,8 @@ fun DropdownMenuExampleUpdate(viewModel: ContentViewModel) {
                 .background(Color.LightGray)
                 .padding(16.dp)
         ) {
-            Text(text)
+            Text(text = text)
+//            text?.let { Text(it) }
         }
 
         DropdownMenu(
