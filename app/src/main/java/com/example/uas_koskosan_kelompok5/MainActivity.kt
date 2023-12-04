@@ -68,6 +68,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.util.Log
+import com.example.uas_koskosan_kelompok5.model.BookmarkModel
+import com.example.uas_koskosan_kelompok5.service.CartService
 import com.example.uas_koskosan_kelompok5.view.content.DetailsScreen
 
 class MainActivity : ComponentActivity() {
@@ -76,6 +78,7 @@ class MainActivity : ComponentActivity() {
     private val database = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         val contentService = ContentService(FirebaseRealtimeService, FirebaseStorageService)
+        val cartService = CartService(FirebaseRealtimeService)
         var authenticationIntent = Intent(this, AuthenticationActivity::class.java)
         FirebaseApp.initializeApp(this)
 //        searchuser(currentUser)
@@ -87,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DashBoardDefaut(currentUser,authenticationIntent,contentService)
+                    DashBoardDefaut(currentUser,authenticationIntent,contentService,cartService)
                 }
             }
         }
@@ -105,7 +108,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
     @Composable
-    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent, contentService: ContentService) {
+    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent, contentService: ContentService, cartService: CartService) {
         val navController = rememberNavController()
 
 //        var contentsData by remember { mutableStateOf<List<ContentModel>?>(null) }
@@ -113,6 +116,7 @@ class MainActivity : ComponentActivity() {
 
         var contentData by remember { mutableStateOf<ContentModel?>(null) }
 
+        val listBookmarks = remember { mutableStateOf<List<ContentModel>>(emptyList()) }
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(Screen.HomeScreen.route)
         }
@@ -221,7 +225,35 @@ class MainActivity : ComponentActivity() {
                     ChatView()
                 }
                 composable(route = Screen.BookmarkScreen.route){
-                    BookmarkView()
+                    LaunchedEffect(listBookmarks) {
+                        if (currentUser != null) {
+                            cartService.getData(currentUser.uid, listBookmarks)
+                        }
+                    }
+                    BookmarkView(
+                        listBookmarks.value,
+                        deleteBookmark = {id ->
+                            lifecycleScope.launch {
+                                try {
+                                    if (currentUser != null) {
+                                        cartService.deleteBookmark(currentUser.uid, id)
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Delete Data Successfully",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                    navController.navigate(Screen.HomeScreen.route)
+                                }catch (e: Exception){
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Cannot Delete Data",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                    )
 //                mainScreen(navController)
                 }
                 composable(route = Screen.ProfileScreen.route){
@@ -243,7 +275,8 @@ class MainActivity : ComponentActivity() {
                     )){
                     Log.d("DETAILCONTENT","MASUK DETAIL CONTENT")
 
-                    contentData?.let { it1 -> DetailsScreen(item = it1,
+                    contentData?.let { it1 -> DetailsScreen(
+                        item = it1,
                         firebaseUser = currentUser,
                         deleteContent = {id ->
                             lifecycleScope.launch {
@@ -290,6 +323,32 @@ class MainActivity : ComponentActivity() {
 //                                if(contentData != null) {
 //                                    navController.navigate("update/${id}")
 //                                }
+                            }
+                        },
+                        addToChart = {id ->
+                            lifecycleScope.launch{
+                                try {
+                                    val data = contentService.getContentById(id)
+                                    var bookmark = BookmarkModel(
+                                        id = data.data?.id,
+                                        data = data.data
+                                    )
+//                                    bookmark.copy(id = bookmark.)
+                                    cartService.addToCart(currentUser?.uid,
+                                        bookmark
+                                    )
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Add to chart successfully",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }catch (e: Exception){
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Cannot Add To Chart",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                             }
                         })
                     }

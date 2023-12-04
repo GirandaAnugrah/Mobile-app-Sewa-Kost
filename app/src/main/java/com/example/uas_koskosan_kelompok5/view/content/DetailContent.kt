@@ -60,21 +60,23 @@ import com.google.firebase.auth.FirebaseUser
 
 
 @Composable
-fun DetailsScreen(item: ContentModel,
-                  firebaseUser: FirebaseUser?,
-           deleteContent:(id: String) -> Unit,
-           updateContent:(id: String) -> Unit) {
+fun DetailsScreen(
+    item: ContentModel,
+    firebaseUser: FirebaseUser?,
+    deleteContent:(id: String) -> Unit,
+    updateContent:(id: String) -> Unit,
+    addToChart: (id: String) -> Unit
+) {
     var question by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     Surface(
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().verticalScroll(enabled = true, state = scrollState)
     ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .verticalScroll(enabled = true, state = scrollState)
         ){
             LazyRow(
                 modifier = Modifier
@@ -152,6 +154,17 @@ fun DetailsScreen(item: ContentModel,
                 }
             }
 
+            Button(
+                onClick = {
+                    addToChart(item.id ?: "")
+                },
+            ) {
+                Text(
+                    text = "Add To Chart",
+                    color = Color.White,
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
+            }
         }
     }
 }
