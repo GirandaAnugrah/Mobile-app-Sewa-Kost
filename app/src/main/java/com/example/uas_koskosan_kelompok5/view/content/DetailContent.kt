@@ -2,6 +2,7 @@ package com.example.uas_koskosan_kelompok5.view.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,15 +23,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,9 +56,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.uas_koskosan_kelompok5.R
 import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.model.FacilitiesModel
 import com.google.firebase.auth.FirebaseUser
@@ -77,6 +83,26 @@ fun DetailsScreen(item: ContentModel,
                 .padding(16.dp)
                 .verticalScroll(enabled = true, state = scrollState)
         ){
+            Row(
+
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                IconButton(
+                    onClick = {
+                        //
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+                Text(
+                    text = "Back",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        //
+                    }
+                )
+            }
+
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,14 +155,15 @@ fun DetailsScreen(item: ContentModel,
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     Button(
                         onClick = {
                             question = true
                         },
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
                         Text(
                             text = "Delete",
@@ -145,10 +172,15 @@ fun DetailsScreen(item: ContentModel,
                         )
                     }
 
+                    Spacer(modifier = Modifier.width(12.dp))
+
                     Button(
                         onClick = {
                             updateContent(item.id ?: "")
                         },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
                         Text(
                             text = "Update",
@@ -182,19 +214,21 @@ fun ContentInformation(name: String, address: String, price: String) {
     Spacer(modifier = Modifier.height(16.dp))
     Text(
         text = name,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface
+        fontWeight = FontWeight.ExtraBold,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier,
+        fontSize = 26.sp
     )
     Text(
         text = address,
-        style = MaterialTheme.typography.headlineSmall,
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 18.sp
     )
     Text(
-        text = "Harga: $price",
+        text = "Rp $price",
         style = MaterialTheme.typography.headlineSmall,
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 18.sp
     )
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -206,7 +240,8 @@ fun ListFacility(facilities: FacilitiesModel) {
         text = "Fasilitas",
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 18.sp
     )
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -301,14 +336,18 @@ fun DetailDescription(desc: String) {
     // Deskripsi
     Text(
         text = "Deskripsi",
-        style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface
+        fontSize = 18.sp,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier
+            .padding(bottom = 6.dp)
     )
     Text(
         text = desc,
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier
+            .padding(bottom = 24.dp)
     )
 }
 

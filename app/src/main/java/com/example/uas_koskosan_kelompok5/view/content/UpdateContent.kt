@@ -97,7 +97,10 @@ fun UpdateContent(
             multiplePhotoPicker.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
-        }) {
+        },
+            modifier = Modifier
+                .padding(top = 24.dp)
+        ) {
             Text("Pick Multiple Images")
         }
         TextField(value = title.toString() ?: "",
