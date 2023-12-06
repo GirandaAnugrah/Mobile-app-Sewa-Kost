@@ -99,7 +99,13 @@ dependencies {
 //    Async image
     implementation("io.coil-kt:coil-compose:2.3.0")
 
+//  Shimer
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
+    implementation("me.nikhilchaudhari:composeNeumorphism:1.0.0-alpha02")
+    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.1.0")
 
+    // separate artifact with utilities for working with kotlinx-datetime
+    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.1.0")
 }
 
 

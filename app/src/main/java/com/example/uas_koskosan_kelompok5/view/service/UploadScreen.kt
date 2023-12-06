@@ -48,6 +48,8 @@ import androidx.compose.foundation.verticalScroll
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
 
 
@@ -63,7 +65,9 @@ fun UploadScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.verticalScroll(enabled = true, state = scrollState)
+        modifier = Modifier
+            .verticalScroll(enabled = true, state = scrollState)
+            .padding(24.dp)
     ) {
         val multiplePhotoPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
@@ -81,7 +85,10 @@ fun UploadScreen(
             multiplePhotoPicker.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
-        }) {
+        },
+            modifier = Modifier
+                .padding(top = 24.dp)
+        ) {
             Text("Pick Multiple Images")
         }
         TextField(value = state.title.orEmpty(),
@@ -90,10 +97,18 @@ fun UploadScreen(
             },
             label = {
                 Text(text = stringResource(id = R.string.content_title))
-            })
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = stringResource(id = R.string.content_facility))
+        Text(text = stringResource(id = R.string.content_facility),
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Start)
         
         ListFacilities(viewModel = viewModel,state = state)
         Spacer(modifier = Modifier.height(16.dp))
@@ -133,8 +148,12 @@ fun UploadScreen(
         Button(onClick = {
             isLoading = true
             onSubmitContent()
-        }) {
-            Text(text = stringResource(id = R.string.submit))
+        },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.submit),fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp)
         }
 
 
@@ -250,6 +269,8 @@ fun ListFacilities(viewModel: ContentViewModel,state: ContentState) {
 fun AddressScreen(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
         label = {
             Text(text = "Address")
     })
@@ -261,6 +282,8 @@ fun AddressScreen(viewModel: ContentViewModel,state: ContentState) {
 fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
         label = {
             Text(text = "Contacts")
         })
@@ -271,6 +294,8 @@ fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
 fun PriceScreen(viewModel: ContentViewModel,state: ContentState) {
     TextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
+        modifier = Modifier
+            .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         label = {
             Text(text = "Price")
@@ -286,7 +311,6 @@ fun DropdownMenuExample(viewModel: ContentViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     ) {
         Box(
             modifier = Modifier
