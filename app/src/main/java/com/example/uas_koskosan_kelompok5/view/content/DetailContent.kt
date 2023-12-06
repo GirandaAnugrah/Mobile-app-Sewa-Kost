@@ -72,13 +72,16 @@ fun DetailsScreen(
     firebaseUser: FirebaseUser?,
     deleteContent:(id: String) -> Unit,
     updateContent:(id: String) -> Unit,
-    addToChart: (id: String) -> Unit
+    addToChart: (id: String) -> Unit,
+    buyContent: (id: String) -> Unit
 ) {
     var question by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     Surface(
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize().verticalScroll(enabled = true, state = scrollState)
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(enabled = true, state = scrollState)
     ){
         Column(
             modifier = Modifier
@@ -153,6 +156,32 @@ fun DetailsScreen(
                     }
                 )
             }
+
+            Row {
+                Button(
+                    onClick = {
+                        addToChart(item.id ?: "")
+                    },
+                ) {
+                    Text(
+                        text = "Add To Chart",
+                        color = Color.White,
+                        style = TextStyle(fontWeight = FontWeight.Bold)
+                    )
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                Button(
+                    onClick = {
+                        buyContent(item.id ?: "")
+                    },
+                ) {
+                    Text(
+                        text = "Buy Now",
+                        color = Color.White,
+                        style = TextStyle(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
             if(firebaseUser?.uid == item.userId){
                 Row(
                     modifier = Modifier
@@ -192,18 +221,7 @@ fun DetailsScreen(
                     }
                 }
             }
-
-            Button(
-                onClick = {
-                    addToChart(item.id ?: "")
-                },
-            ) {
-                Text(
-                    text = "Add To Chart",
-                    color = Color.White,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
-                )
-            }
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

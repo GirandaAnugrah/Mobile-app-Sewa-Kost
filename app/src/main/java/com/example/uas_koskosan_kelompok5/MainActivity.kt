@@ -68,9 +68,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.uas_koskosan_kelompok5.model.BookmarkModel
+import com.example.uas_koskosan_kelompok5.model.TransactionModel
 import com.example.uas_koskosan_kelompok5.service.CartService
+import com.example.uas_koskosan_kelompok5.service.TransactionService
+import com.example.uas_koskosan_kelompok5.view.TransactionScreen
 import com.example.uas_koskosan_kelompok5.view.content.DetailsScreen
+import java.util.UUID
 
 class MainActivity : ComponentActivity() {
     private var currentUser = Firebase.auth.currentUser
@@ -79,6 +97,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val contentService = ContentService(FirebaseRealtimeService, FirebaseStorageService)
         val cartService = CartService(FirebaseRealtimeService)
+        val transactionService = TransactionService(FirebaseRealtimeService,FirebaseStorageService)
         var authenticationIntent = Intent(this, AuthenticationActivity::class.java)
         FirebaseApp.initializeApp(this)
 //        searchuser(currentUser)
@@ -90,7 +109,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DashBoardDefaut(currentUser,authenticationIntent,contentService,cartService)
+//                    NavbarApp()
+                    DashBoardDefaut(currentUser,authenticationIntent,contentService,cartService,transactionService)
                 }
             }
         }
@@ -108,7 +128,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
     @Composable
-    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent, contentService: ContentService, cartService: CartService) {
+    fun DashBoardDefaut(currentUser: FirebaseUser?, auth: Intent, contentService: ContentService, cartService: CartService,transactionService: TransactionService) {
         val navController = rememberNavController()
 
 //        var contentsData by remember { mutableStateOf<List<ContentModel>?>(null) }
@@ -116,7 +136,8 @@ class MainActivity : ComponentActivity() {
 
         var contentData by remember { mutableStateOf<ContentModel?>(null) }
 
-        val listBookmarks = remember { mutableStateOf<List<ContentModel>>(emptyList()) }
+        val listBookmarks = remember { mutableStateOf<List<BookmarkModel>>(emptyList()) }
+        val listTransactions = remember { mutableStateOf<List<TransactionModel>>(emptyList()) }
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(Screen.HomeScreen.route)
         }
@@ -128,9 +149,9 @@ class MainActivity : ComponentActivity() {
                 itemRoute = Screen.HomeScreen.route
             ),
             BottomNavigationItem(
-                title = "Chat",
-                selectedIcon = Icons.Filled.Email,
-                unSelectIcon = Icons.Outlined.Email,
+                title = "Transaction",
+                selectedIcon = Icons.Filled.List,
+                unSelectIcon = Icons.Outlined.List,
                 itemRoute = Screen.ChatScreen.route
             ),
             BottomNavigationItem(
@@ -146,7 +167,35 @@ class MainActivity : ComponentActivity() {
                 itemRoute = Screen.ProfileScreen.route
             ),
         )
+
         Scaffold(
+            topBar = {
+                Row(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(5.dp, 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "REKOST",
+                            fontSize = 23.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    // Tampilin profile user
+                    AsyncImage(
+                        model = currentUser?.photoUrl,
+                        contentDescription = "Profile User",
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(shape = CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            },
             bottomBar = {
                 NavigationBar {
                     val currentRoute = selectedItemIndex
@@ -195,7 +244,9 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(contentData) {
                         contentService.getData(contentsData)
                     }
-                    HomeView(navController = navController,contentsData.value,
+                    HomeView(navController = navController,
+                        currentUser = currentUser,
+                        contentsData.value,
                         navigateToDetails = {id ->
                             lifecycleScope.launch {
                                 try {
@@ -221,8 +272,22 @@ class MainActivity : ComponentActivity() {
                         })
                 }
                 composable(route = Screen.ChatScreen.route){
+
+                    LaunchedEffect(listTransactions) {
+                        if (currentUser != null) {
+                            transactionService.getDataFromCutomer(currentUser.uid, listTransactions)
+                        }
+                    }
 //                ChatView(navController = navController)
-                    ChatView()
+//                    ChatView()
+                    TransactionScreen(
+                        items = listTransactions.value,
+                        intoDetailTransaction = {id ->
+                            lifecycleScope.launch {
+                                intoTransactionActivityPayment(id)
+                            }
+                        }
+                    )
                 }
                 composable(route = Screen.BookmarkScreen.route){
                     LaunchedEffect(listBookmarks) {
@@ -300,29 +365,6 @@ class MainActivity : ComponentActivity() {
                         updateContent = {id ->
                             lifecycleScope.launch {
                                 intoServiceActivityUpdate(id)
-//                                try {
-//                                    val result = contentService.getContentById(id)
-//                                    if (result.data == null) {
-//                                        Toast.makeText(
-//                                            applicationContext,
-//                                            "Item Not Found",
-//                                            Toast.LENGTH_LONG
-//                                        ).show()
-//                                        navController.navigate(Screen.HomeScreen.route)
-//                                    } else {
-//                                        Log.d("DETAILCONTENT","Parsing data")
-//                                        contentData = result.data
-//                                    }
-//                                }catch (e: Exception){
-//                                    Toast.makeText(
-//                                        applicationContext,
-//                                        "Something went wrong error 400",
-//                                        Toast.LENGTH_LONG
-//                                    ).show()
-//                                }
-//                                if(contentData != null) {
-//                                    navController.navigate("update/${id}")
-//                                }
                             }
                         },
                         addToChart = {id ->
@@ -330,7 +372,7 @@ class MainActivity : ComponentActivity() {
                                 try {
                                     val data = contentService.getContentById(id)
                                     var bookmark = BookmarkModel(
-                                        id = data.data?.id,
+                                        id = UUID.randomUUID().toString(),
                                         data = data.data
                                     )
 //                                    bookmark.copy(id = bookmark.)
@@ -349,6 +391,11 @@ class MainActivity : ComponentActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
+                            }
+                        },
+                        buyContent = { id ->
+                            lifecycleScope.launch {
+                                intoTransactionActivity(id)
                             }
                         })
                     }
@@ -388,7 +435,16 @@ class MainActivity : ComponentActivity() {
     private fun intoServiceActivityUpdate(id: String) {
         val intent = Intent(this, ServiceActivity::class.java)
         intent.putExtra("ID",id)
-//        intent.putExtra("ISUPDATE", true)
+        startActivity(intent)
+    }
+    private fun intoTransactionActivity(id: String) {
+        val intent = Intent(this, TransactionActivity::class.java)
+        intent.putExtra("ID",id)
+        startActivity(intent)
+    }
+    private fun intoTransactionActivityPayment(id: String) {
+        val intent = Intent(this, TransactionActivity::class.java)
+        intent.putExtra("TRANSACTION",id)
         startActivity(intent)
     }
 

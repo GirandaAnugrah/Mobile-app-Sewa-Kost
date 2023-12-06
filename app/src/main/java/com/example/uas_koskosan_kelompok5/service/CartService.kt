@@ -25,16 +25,17 @@ class CartService(firebase: FirebaseRealtimeService): CartDao{
         }
     }
 
-    override suspend fun getData(userId: String,data: MutableState<List<ContentModel>>) {
+    override suspend fun getData(userId: String,data: MutableState<List<BookmarkModel>>) {
         val ref = userId?.let { database.child(it) }
 
         ref?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val dataList = mutableListOf<ContentModel>()
+                val dataList = mutableListOf<BookmarkModel>()
 
                 for (childSnapshot in snapshot.children) {
                     try {
-                        val myData = childSnapshot.getValue(ContentModel::class.java)
+                        val myData = childSnapshot.getValue(BookmarkModel::class.java)
+//                        val newData =
                         if (myData != null) {
                             dataList.add(myData)
                         }
