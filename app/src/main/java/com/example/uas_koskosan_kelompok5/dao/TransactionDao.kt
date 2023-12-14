@@ -12,4 +12,21 @@ interface TransactionDao {
     suspend fun getDataFromCutomer(userId: String,data: MutableState<List<TransactionModel>>)
     suspend fun getDataFromSeller(userId: String,data: MutableState<List<TransactionModel>>)
     suspend fun getTransactionById(id: String): TransactionData
+    suspend fun updateStatusTransaction(id: String,data: TransactionModel,newStatus: String): TransactionData
+
+    suspend fun updateStatusAndImagePayment(
+        id: String,
+        status: String,
+        images: List<Uri>,
+        oldContent:TransactionModel,
+        contextResolver: ContentResolver
+    ): TransactionData
+
+    suspend fun deleteContent(id: String): Boolean
+    suspend fun updateHistory(
+        id: String,
+        images: List<Uri>,
+        oldContent:TransactionModel,
+        contextResolver: ContentResolver
+    ): TransactionData
 }

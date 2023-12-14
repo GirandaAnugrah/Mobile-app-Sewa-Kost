@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.uas_koskosan_kelompok5.model.ContentData
+import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.utils.CheckBoxItems
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,23 @@ class ContentViewModel: ViewModel() {
     val checkboxItems: List<CheckBoxItems> = _checkboxItems
 
 
+    fun initData(content: ContentModel){
+        _state.update { it.copy(
+            title = content.title,
+            description = content.description,
+            imagesUpdate = content.images,
+            address = content.address,
+            type = content.type,
+            telp = content.telp,
+            price = content.price.toString(),
+            electricity = content.facilities?.electricity ?: false,
+            bed = content.facilities?.bed ?: false,
+            desk = content.facilities?.desk ?: false,
+            cupboard = content.facilities?.cupboard ?: false,
+            pillow = content.facilities?.pillow ?: false,
+            chair = content.facilities?.chair ?: false
+        ) }
+    }
     fun onCreateResult(result : ContentData) {
         _state.update { it.copy(
             isCreatePostSuccessful = result.data != null,

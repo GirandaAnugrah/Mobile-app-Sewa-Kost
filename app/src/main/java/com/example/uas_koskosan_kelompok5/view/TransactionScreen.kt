@@ -23,14 +23,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.uas_koskosan_kelompok5.R
 import com.example.uas_koskosan_kelompok5.model.BookmarkModel
 import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.model.TransactionModel
+import okhttp3.internal.wait
 
 @Composable
 fun TransactionScreen(
@@ -38,6 +41,7 @@ fun TransactionScreen(
     intoDetailTransaction: (id: String) -> Unit
 ) {
 //    Text(text = items.toString())
+    val sortedItems = items.sortedByDescending { it.data?.id ?: "" }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -54,19 +58,22 @@ fun TransactionScreen(
                 style = TextStyle(fontSize = 30.sp),
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
             )
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
                     .background(Color.White)
             ) {
-                itemsIndexed(items){index, item ->
+                itemsIndexed(sortedItems){index, item ->
                     item.data?.let {
-                        TransactionCard(
-                            transaction = item,
-                            item = it,
-                            intoDetailTransaction
-                        )
+                        if(item.status != stringResource(id = R.string.success)){
+                            TransactionCard(
+                                transaction = item,
+                                item = it,
+                                intoDetailTransaction
+                            )
+                        }
                     }
                 }
 
@@ -85,7 +92,8 @@ fun TransactionCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .background(Color.White).clickable{intoDetailTransaction(transaction.id ?: "")},
+            .background(Color.White)
+            .clickable { intoDetailTransaction(transaction.id ?: "") },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White

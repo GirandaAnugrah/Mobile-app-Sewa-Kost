@@ -122,50 +122,45 @@ class ServiceActivity : ComponentActivity() {
                             }
                         )
                     }else {
-                        contentViewModel.onImagesChangeFromUpdate(contentData?.images)
-                        contentViewModel.onTitleChange(contentData?.title)
-                        contentViewModel.onAddressChange(contentData?.address)
-                        contentViewModel.onTelpChange(contentData?.telp)
-                        contentViewModel.onTypeChange(contentData?.type)
-                        contentViewModel.onDescriptionChange(contentData?.description)
-                        contentViewModel.onPriceChange(contentData?.price.toString())
-                        contentViewModel.onElectricityChange(contentData?.facilities?.electricity)
-                        contentViewModel.onBedChange(contentData?.facilities?.bed)
-                        contentViewModel.onDeskChange(contentData?.facilities?.desk)
-                        contentViewModel.onCupboardChange(contentData?.facilities?.cupboard)
-                        contentViewModel.onPillowChange(contentData?.facilities?.pillow)
-                        contentViewModel.onChairChange(contentData?.facilities?.chair)
-                        UpdateContent(
-                            state = contentState,
-                            viewModel = contentViewModel,
-                            onSubmitContent = {
-                                lifecycleScope.launch {
-                                    val facilities = FacilitiesModel(
-                                        electricity = contentState.electricity,
-                                        bed = contentState.bed,
-                                        desk = contentState.desk,
-                                        cupboard = contentState.cupboard,
-                                        pillow = contentState.pillow,
-                                        chair = contentState.chair,
-                                    )
-                                    val content = ContentModel(
-                                        title = contentState.title,
-                                        facilities = facilities,
-                                        description = contentState.description,
-                                        telp = contentState.telp,
-                                        price = contentState.price?.toInt(),
-                                        address = contentState.address,
-                                        type = contentState.type
-                                    )
-                                    val result = contentService.updateContent(
-                                        id = contentData?.id ?: "",
-                                        content = content,
-
-                                    )
-//                                    contentViewModel.onCreateResult(result)
-                                    contentViewModel.resetState()
-                                }
-                            })
+//                        LaunchedEffect(key1 = true){
+//                            contentData?.let { contentViewModel.initData(it) }
+//                        }
+                        contentData?.let {
+                            UpdateContent(
+                                content = it,
+                                state = contentState,
+                                viewModel = contentViewModel,
+                                onSubmitContent = {
+                                    lifecycleScope.launch {
+                                        val facilities = FacilitiesModel(
+                                            electricity = contentState.electricity,
+                                            bed = contentState.bed,
+                                            desk = contentState.desk,
+                                            cupboard = contentState.cupboard,
+                                            pillow = contentState.pillow,
+                                            chair = contentState.chair,
+                                        )
+                                        val content = ContentModel(
+                                            title = contentState.title,
+                                            facilities = facilities,
+                                            description = contentState.description,
+                                            telp = contentState.telp,
+                                            price = contentState.price?.toInt(),
+                                            address = contentState.address,
+                                            type = contentState.type
+                                        )
+                                        val result = contentService.updateContent(
+                                            id = contentData?.id ?: "",
+                                            content = content,
+                                            images = contentState.images ?: emptyList(),
+                                            oldContent = contentData!!,
+                                            contextResolver = contentResolver
+                                        )
+                                        contentViewModel.onCreateResult(result)
+//                                        contentViewModel.resetState()
+                                    }
+                                })
+                        }
 //                        Text(text = contentData.toString())
                     }
                 }

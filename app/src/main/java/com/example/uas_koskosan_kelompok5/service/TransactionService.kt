@@ -2,7 +2,9 @@ package com.example.uas_koskosan_kelompok5.service
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import com.example.uas_koskosan_kelompok5.dao.TransactionDao
 import com.example.uas_koskosan_kelompok5.firebaseService.FirebaseRealtimeService
@@ -16,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
 
 class TransactionService(firebase: FirebaseRealtimeService, firebaseStorage: FirebaseStorageService) : TransactionDao {
     private val database = firebase.getReferenceChild("transaction")
@@ -120,5 +123,114 @@ class TransactionService(firebase: FirebaseRealtimeService, firebaseStorage: Fir
             TransactionData(data = null, errorMessage = e.message)
         }
     }
+
+    override suspend fun updateStatusTransaction(
+        id: String,
+        data: TransactionModel,
+        newStatus: String,
+    ): TransactionData {
+        try {
+            val transactionSnapshot = database.child(id ?: "").get().await()
+            if(transactionSnapshot.exists()){
+                val transactionRef = database.child(id ?: "")
+                val update = data.copy(
+                    status = newStatus
+                )
+                transactionRef.setValue(update).await()
+                return TransactionData(data = data,errorMessage = null)
+            }
+            return TransactionData(data = null,errorMessage = "Transaction Not Found")
+        }catch (e: Exception){
+            return TransactionData(data = data, errorMessage = "ERROR 505 SEREVER ERROR")
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun updateStatusAndImagePayment(
+        id: String,
+        status: String,
+        images: List<Uri>,
+        oldContent:TransactionModel,
+        contextResolver: ContentResolver
+    ): TransactionData {
+        try {
+            val transactionSnapshot = database.child(id ?: "").get().await()
+            var imagesUrls :List<String?>  = oldContent.payment ?: emptyList()
+            if(transactionSnapshot.exists()) {
+                if(images.isNotEmpty()){
+                    val imagesLinks = images.map { uri ->
+                        val image = storage.readImageBytes(contentResolver = contextResolver, uri = uri)
+//                        Log.d("IMAGES", image.toString())
+                        storage.uploadImageToFirebase(image)
+                    }
+                    imagesUrls = imagesLinks
+                }
+                val currentDate: LocalDate = LocalDate.now()
+                val newStatusPayment: MutableList<String>? = oldContent.paymentHistory?.toMutableList()
+                newStatusPayment?.add(currentDate.toString())
+                val transactionRef = database.child(id ?: "")
+                val updatedTransaction = oldContent.copy(
+                    payment = imagesUrls.filterNotNull(),
+                    status = status,
+                    paymentHistory = newStatusPayment?.toList()
+                )
+                transactionRef.setValue(updatedTransaction).await()
+                return TransactionData(data = updatedTransaction, errorMessage = null)
+            }
+            else {
+                return TransactionData(data = null, errorMessage = "transaction not found")
+            }
+        } catch (e : Exception) {
+            return TransactionData(data = null, errorMessage = e.message)
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun updateHistory(
+        id: String,
+        images: List<Uri>,
+        oldContent:TransactionModel,
+        contextResolver: ContentResolver
+    ): TransactionData {
+        try {
+            val transactionSnapshot = database.child(id ?: "").get().await()
+            var imagesUrls :MutableList<String>?  = oldContent.payment?.toMutableList()
+            if(transactionSnapshot.exists()) {
+                if(images.isNotEmpty()){
+                    val imagesLinks = images.map { uri ->
+                        val image = storage.readImageBytes(contentResolver = contextResolver, uri = uri)
+//                        Log.d("IMAGES", image.toString())
+                        storage.uploadImageToFirebase(image)
+                    }
+                    imagesLinks[0]?.let { imagesUrls?.add(it) }
+                }
+                val currentDate: LocalDate = LocalDate.now()
+                val newStatusPayment: MutableList<String>? = oldContent.paymentHistory?.toMutableList()
+                newStatusPayment?.add(currentDate.toString())
+                val transactionRef = database.child(id ?: "")
+                val updatedTransaction = oldContent.copy(
+                    payment = imagesUrls,
+                    startDate = currentDate.toString(),
+                    paymentHistory = newStatusPayment?.toList()
+                )
+                transactionRef.setValue(updatedTransaction).await()
+                return TransactionData(data = updatedTransaction, errorMessage = null)
+            }
+            else {
+                return TransactionData(data = null, errorMessage = "transaction not found")
+            }
+        } catch (e : Exception) {
+            return TransactionData(data = null, errorMessage = e.message)
+        }
+    }
+    override suspend fun deleteContent(id: String): Boolean {
+        return try {
+            val ref = database.child(id)
+            ref.removeValue().await()
+            true
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
 
 }

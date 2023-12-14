@@ -29,4 +29,10 @@
     <string name="guard">Guard</string>
 
     <string name="blank_field">Field Cannot Blank</string>
+    <string name="payment">Menunggu Pembayaran</string>
+    <string name="pending">Pending</string>
+    <string name="diperiksa">Sedang Diperiksa</string>
+    <string name="success">Success</string>
+
+
 </resources>

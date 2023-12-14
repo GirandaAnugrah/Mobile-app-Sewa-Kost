@@ -27,6 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,16 +55,21 @@ fun HomeView(
     contentModel: List<ContentModel>,
     navigateToDetails: (carId: String) -> Unit
 ) {
+    var searchQuery by remember { mutableStateOf("") }
+    val sortedItems = contentModel.sortedByDescending { it?.id ?: "" }
+    val filteredItems = sortedItems.filter {
+        it.title?.contains(searchQuery, ignoreCase = true) == true
+    }
     Column(
         modifier = Modifier
             .padding(16.dp)
     ) {
-        var search = ""
+        Spacer(modifier = Modifier.height(50.dp))
         Row() {
             TextField(
-                value = search,
+                value = searchQuery,
                 onValueChange = {
-                    search = it
+                    searchQuery = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -72,8 +81,7 @@ fun HomeView(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2) // Jumlah kolom dalam grid (misalnya 3)
         ) {
-            itemsIndexed(contentModel) {index, item ->
-
+            itemsIndexed(filteredItems) {index, item ->
                 item.price?.let { item?.images?.let { it1 -> item.title?.let { it2 -> item.type?.let { it3 -> item.id?.let { it4 -> ProductCard(
                     imageUrl = it1.get(0),
                     title = it2,
