@@ -51,16 +51,21 @@ import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun UpdateContent(
+    content: ContentModel,
     state: ContentState,
     viewModel: ContentViewModel,
     onSubmitContent: () -> Unit
 ) {
+    LaunchedEffect(key1 = true){
+        viewModel.initData(content)
+    }
 
     var isLoading by remember { mutableStateOf(false) }
 
@@ -103,7 +108,7 @@ fun UpdateContent(
         ) {
             Text("Pick Multiple Images")
         }
-        TextField(value = title.toString() ?: "",
+        TextField(value = state.title ?: "",
             onValueChange = {title ->
                 viewModel.onTitleChange(title)
             },

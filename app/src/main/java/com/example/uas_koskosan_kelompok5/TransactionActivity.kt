@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import com.example.uas_koskosan_kelompok5.ui.theme.UAS_KosKosan_Kelompok5Theme
 import com.example.uas_koskosan_kelompok5.view.component.CalendarScreen
 import com.example.uas_koskosan_kelompok5.view.transaction.PaymentScreen
 import com.example.uas_koskosan_kelompok5.view.transaction.RequestTransaction
+import com.example.uas_koskosan_kelompok5.view.transaction.SellerAcceptScreen
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import com.example.uas_koskosan_kelompok5.viewmodel.TransactionViewModel
 import com.google.firebase.Firebase
@@ -54,19 +56,15 @@ class TransactionActivity : ComponentActivity() {
         val contentService = ContentService(FirebaseRealtimeService, FirebaseStorageService)
         val contentId = intent.getStringExtra("ID") ?: ""
         val transactionId = intent.getStringExtra("TRANSACTION") ?: ""
+        val transactionSeller = intent.getStringExtra("TRANSACTIONSELLER") ?: ""
         val transactionService = TransactionService(FirebaseRealtimeService, FirebaseStorageService)
         setContent {
             val transactionViewModel = viewModel<TransactionViewModel>()
             val transactionState by transactionViewModel.state.collectAsStateWithLifecycle()
             var contentData by remember { mutableStateOf<ContentModel?>(null) }
-            var transactionData by remember { mutableStateOf<TransactionModel?>(null) }
             LaunchedEffect(key1 = contentId){
                 val data = contentService.getContentById(contentId)
                 contentData = data.data
-            }
-            LaunchedEffect(key1 = transactionId){
-                val data = transactionService.getTransactionById(transactionId)
-                transactionData = data.data
             }
             LaunchedEffect(key1 = transactionState.isCreatePostSuccessful){
                 if(transactionState.isCreatePostSuccessful){
@@ -86,27 +84,24 @@ class TransactionActivity : ComponentActivity() {
                 }
             }
             UAS_KosKosan_Kelompok5Theme {
-                contentData?.let { transactionData?.let { it1 ->
-                    TransactionNavigation(it,
-                        it1,transactionViewModel, transactionState,transactionService)
-                } }
+
+                contentData?.let { TransactionNavigation(it, transactionViewModel, transactionState,transactionService) }
             }
         }
     }
 
 
-
+    @Composable
+    fun Test() {
+        Text(text = "TESTING")
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UnrememberedMutableState")
     @Composable
-    fun TransactionNavigation(item: ContentModel,transactionData: TransactionModel, transactionViewModel: TransactionViewModel, transactionState: TransactionState,transactionService: TransactionService) {
+    fun TransactionNavigation(item: ContentModel, transactionViewModel: TransactionViewModel, transactionState: TransactionState,transactionService: TransactionService) {
         val navController = rememberNavController()
         var transactionDay by remember { mutableStateOf<LocalDate?>(null) }
-//        var dest = "calendar"
         var dest by remember { mutableStateOf("calendar") }
-        if (!transactionData.id.isNullOrBlank()){
-            dest = "payment"
-        }
         NavHost(navController,startDestination = dest){
             composable("calendar"){
                 CalendarScreen(addDay = {day ->
@@ -146,18 +141,6 @@ class TransactionActivity : ComponentActivity() {
                         }
                     )
                 }
-            }
-            composable("payment"){
-                PaymentScreen(
-                    transaction = transactionData,
-                    viewModel = transactionViewModel,
-                    state = transactionState,
-                    payment = {
-                        lifecycleScope.launch {
-                            intoMainActivity()
-                        }
-                    }
-                )
             }
         }
     }

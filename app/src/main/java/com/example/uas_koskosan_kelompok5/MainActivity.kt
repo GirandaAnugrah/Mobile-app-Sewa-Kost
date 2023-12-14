@@ -79,6 +79,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -86,8 +87,10 @@ import com.example.uas_koskosan_kelompok5.model.BookmarkModel
 import com.example.uas_koskosan_kelompok5.model.TransactionModel
 import com.example.uas_koskosan_kelompok5.service.CartService
 import com.example.uas_koskosan_kelompok5.service.TransactionService
+import com.example.uas_koskosan_kelompok5.view.MyKostScreen
 import com.example.uas_koskosan_kelompok5.view.TransactionScreen
 import com.example.uas_koskosan_kelompok5.view.content.DetailsScreen
+import com.example.uas_koskosan_kelompok5.view.transaction.DetailTransactionCustomer
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -141,6 +144,13 @@ class MainActivity : ComponentActivity() {
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(Screen.HomeScreen.route)
         }
+        var isSellerArray : List<String>?
+        var isSeller: Boolean? = false
+        if(!currentUser?.uid.isNullOrBlank()){
+            isSellerArray = currentUser?.displayName?.split(" ")
+            isSeller = isSellerArray!![isSellerArray.size - 1] == stringResource(id = R.string.isSeller)
+        }
+//        val isSeller = true
         val items = listOf(
             BottomNavigationItem(
                 title = "Home",
@@ -155,7 +165,7 @@ class MainActivity : ComponentActivity() {
                 itemRoute = Screen.ChatScreen.route
             ),
             BottomNavigationItem(
-                title = "Bookmark",
+                title = "My Kost",
                 selectedIcon = Icons.Filled.Email,
                 unSelectIcon = Icons.Outlined.Email,
                 itemRoute = Screen.BookmarkScreen.route
@@ -167,7 +177,6 @@ class MainActivity : ComponentActivity() {
                 itemRoute = Screen.ProfileScreen.route
             ),
         )
-
         Scaffold(
             topBar = {
                 Row(
@@ -266,7 +275,8 @@ class MainActivity : ComponentActivity() {
                                     Log.e("DETAILS", e.toString())
                                 }
                                 if(contentData != null) {
-                                    navController.navigate("content_detail/${id}")
+                                    intoDetailActivity(id)
+//                                    navController.navigate("content_detail/${id}")
                                 }
                             }
                         })
@@ -274,51 +284,48 @@ class MainActivity : ComponentActivity() {
                 composable(route = Screen.ChatScreen.route){
 
                     LaunchedEffect(listTransactions) {
-                        if (currentUser != null) {
+                        if (currentUser != null && !isSeller!!) {
                             transactionService.getDataFromCutomer(currentUser.uid, listTransactions)
+                        }else if (currentUser != null && isSeller == true){
+                            transactionService.getDataFromSeller(currentUser.uid, listTransactions)
                         }
+
                     }
-//                ChatView(navController = navController)
-//                    ChatView()
                     TransactionScreen(
                         items = listTransactions.value,
                         intoDetailTransaction = {id ->
                             lifecycleScope.launch {
-                                intoTransactionActivityPayment(id)
+                                if (isSeller == true){
+                                    intoTransactionSellerActivity(id)
+                                }else{
+                                    intoTransactionCustomerActivity(id)
+                                }
                             }
                         }
                     )
                 }
                 composable(route = Screen.BookmarkScreen.route){
-                    LaunchedEffect(listBookmarks) {
-                        if (currentUser != null) {
-                            cartService.getData(currentUser.uid, listBookmarks)
+                    LaunchedEffect(listTransactions) {
+                        if (currentUser != null && !isSeller!!) {
+                            transactionService.getDataFromCutomer(currentUser.uid, listTransactions)
+                        }else if (currentUser != null && isSeller == true){
+                            transactionService.getDataFromSeller(currentUser.uid, listTransactions)
                         }
+
                     }
-                    BookmarkView(
-                        listBookmarks.value,
-                        deleteBookmark = {id ->
+                    MyKostScreen(
+                        items = listTransactions.value,
+                        intoDetailTransaction = {id ->
                             lifecycleScope.launch {
-                                try {
-                                    if (currentUser != null) {
-                                        cartService.deleteBookmark(currentUser.uid, id)
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Delete Data Successfully",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                    navController.navigate(Screen.HomeScreen.route)
-                                }catch (e: Exception){
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Cannot Delete Data",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                if (isSeller == true){
+                                    intoTransactionSellerActivity(id)
+                                }else{
+                                    intoTransactionCustomerActivity(id)
                                 }
                             }
                         }
                     )
+
 //                mainScreen(navController)
                 }
                 composable(route = Screen.ProfileScreen.route){
@@ -332,85 +339,7 @@ class MainActivity : ComponentActivity() {
                         ProfileViewUserNotLogin(auth)
                     }
                 }
-                composable(route = "content_detail/{id}",
-                    arguments = listOf(
-                        navArgument("id") {
-                            type = NavType.StringType
-                        }
-                    )){
-                    Log.d("DETAILCONTENT","MASUK DETAIL CONTENT")
-
-                    contentData?.let { it1 -> DetailsScreen(
-                        item = it1,
-                        firebaseUser = currentUser,
-                        deleteContent = {id ->
-                            lifecycleScope.launch {
-                                try {
-                                    contentService.deleteContent(id)
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Delete Data Successfully",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    navController.navigate(Screen.HomeScreen.route)
-                                }catch (e: Exception){
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Cannot Delete Data",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        },
-                        updateContent = {id ->
-                            lifecycleScope.launch {
-                                intoServiceActivityUpdate(id)
-                            }
-                        },
-                        addToChart = {id ->
-                            lifecycleScope.launch{
-                                try {
-                                    val data = contentService.getContentById(id)
-                                    var bookmark = BookmarkModel(
-                                        id = UUID.randomUUID().toString(),
-                                        data = data.data
-                                    )
-//                                    bookmark.copy(id = bookmark.)
-                                    cartService.addToCart(currentUser?.uid,
-                                        bookmark
-                                    )
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Add to chart successfully",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }catch (e: Exception){
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Cannot Add To Chart",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        },
-                        buyContent = { id ->
-                            lifecycleScope.launch {
-                                intoTransactionActivity(id)
-                            }
-                        })
-                    }
-                }
-                composable(route = "update/{id}",
-                    arguments = listOf(
-                        navArgument("id") {
-                            type = NavType.StringType
-                        }
-                    )){
-
-
-//                    BookmarkView()
-//                mainScreen(navController)
-                }
+//                Section Detail
             }
 
         }
@@ -432,18 +361,19 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun intoServiceActivityUpdate(id: String) {
-        val intent = Intent(this, ServiceActivity::class.java)
+    private fun intoDetailActivity(id: String) {
+        val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra("ID",id)
         startActivity(intent)
     }
-    private fun intoTransactionActivity(id: String) {
-        val intent = Intent(this, TransactionActivity::class.java)
-        intent.putExtra("ID",id)
+
+    private fun intoTransactionSellerActivity(id: String) {
+        val intent = Intent(this, SellerTransactionActivity::class.java)
+        intent.putExtra("TRANSACTION",id)
         startActivity(intent)
     }
-    private fun intoTransactionActivityPayment(id: String) {
-        val intent = Intent(this, TransactionActivity::class.java)
+    private fun intoTransactionCustomerActivity(id: String) {
+        val intent = Intent(this,CustomerTransactionActivity::class.java)
         intent.putExtra("TRANSACTION",id)
         startActivity(intent)
     }

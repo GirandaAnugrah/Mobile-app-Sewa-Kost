@@ -14,5 +14,7 @@ data class TransactionModel(
     val status: String? = "Pending",
     val startDate: String? = null,
     val cardIdentity: List<String>? = emptyList(),
+    val paymentHistory: List<String>? = emptyList(),
+    val payment: List<String>? = emptyList(),
     val data: ContentModel? = null,
 )

@@ -1,9 +1,7 @@
 package com.example.uas_koskosan_kelompok5.view.transaction
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -23,81 +18,75 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.model.TransactionModel
-import com.example.uas_koskosan_kelompok5.state.TransactionState
-import com.example.uas_koskosan_kelompok5.viewmodel.TransactionViewModel
+import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
 
 @Composable
-fun PaymentScreen(
-    transaction: TransactionModel,
-    viewModel: TransactionViewModel,
-    state: TransactionState,
-    payment: () -> Unit
+fun SellerAcceptScreen(
+    data: TransactionModel,
+    updateStatus: (transaction: TransactionModel) -> Unit
 ) {
     val scrollState = rememberScrollState()
-//    Text(text = transaction.toString())
+    var isLoading by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .verticalScroll(enabled = true, state = scrollState)
+            .padding(horizontal = 8.dp)
     ) {
-        transaction.data?.let { PaymentCard(item = it) }
-//        Text(text = transaction.toString())
-        Spacer(modifier = Modifier.height(50.dp))
-        Text(text = "Transfer BCA 345612345893")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Rp. ${transaction.data?.price.toString()}")
-        Spacer(modifier = Modifier.height(50.dp))
-        PaymentProof(viewModel = viewModel, state = state)
-        Spacer(modifier = Modifier.height(50.dp))
-        Button(onClick = {
-            payment()
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-        ) {
-            Text(text = "Send")
-        }
-    }
-}
-
-
-@Composable
-fun PaymentProof(viewModel: TransactionViewModel, state: TransactionState) {
-    Text(text = "Masukkan Bukti Pembayaran")
-    val multiplePhotoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = {
-            viewModel.onImageChange(it)
-        }
-    )
-    LazyRow{
-        items(state.cardIdentity ?: emptyList()){ uri ->
-            AsyncImage(model = uri, contentDescription = null, modifier = Modifier.size(248.dp))
-        }
-    }
-    Button(onClick = {
-        multiplePhotoPicker.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        Text(text = "Agreement", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(20.dp))
+        data.data?.let { SellerRequestCard(it) }
+        Text(text = "Name : ${data.name}")
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(text = "Gender : ${data.gender}")
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(text = "Job : ${data.job}")
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(text = "Start Date : ${data.startDate}")
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(text = "No Telp : ${data.noTelephone}")
+        Spacer(modifier = Modifier.height(15.dp))
+        AsyncImage(
+            model = data.cardIdentity?.get(0),
+            contentDescription = null ,
+            modifier = Modifier
+                .height(170.dp)
+                .fillMaxWidth(),
+            contentScale = ContentScale.Crop
         )
-    },
-        modifier = Modifier
-            .padding(top = 24.dp)
-            .fillMaxWidth()
-    ) {
-        Text("Upload Bukti")
+
+        ProgressLoadingScreen(isLoading = isLoading)
+
+        Button(onClick = {
+            updateStatus(data)
+            isLoading = true
+        },
+            modifier = Modifier.fillMaxSize(),
+            enabled = data.status != "Menunggu Pembayaran"
+        ) {
+            Text(text = "Accept")
+        }
+
     }
 }
 
+
+
 @Composable
-fun PaymentCard(item: ContentModel) {
+fun SellerRequestCard(item: ContentModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,12 +141,5 @@ fun PaymentCard(item: ContentModel) {
 
             }
         }
-    }
-}
-
-@Composable
-fun CutomerInformation(item: TransactionModel) {
-    Column {
-
     }
 }
