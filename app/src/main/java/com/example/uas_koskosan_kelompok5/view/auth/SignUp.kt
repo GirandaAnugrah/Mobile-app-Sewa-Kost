@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -141,6 +142,7 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.password_field))
             },
+            visualTransformation = PasswordVisualTransformation(),
             isError = isErrorPassword,
             modifier = Modifier
                 .fillMaxWidth()
@@ -159,6 +161,7 @@ fun SignUpScreen(
             label = {
                 Text(text = stringResource(id = R.string.confirm_field))
             },
+            visualTransformation = PasswordVisualTransformation(),
             isError = isErrorPassword,
             modifier = Modifier
                 .fillMaxWidth()
@@ -201,7 +204,7 @@ fun SignUpScreen(
                 .padding(top = 20.dp)
                 .height(56.dp)
         ) {
-            Text(text = stringResource(id = R.string.login))
+            Text(text = "Sign up")
         }
 
 //        Row {

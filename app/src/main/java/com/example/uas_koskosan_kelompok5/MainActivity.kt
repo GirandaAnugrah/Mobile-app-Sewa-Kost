@@ -183,7 +183,7 @@ class MainActivity : ComponentActivity() {
                 Row(
                     modifier = Modifier
                         .background(Color.White)
-                        .padding(5.dp, 10.dp),
+                        .padding(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,9 +46,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -77,32 +80,42 @@ fun DetailsScreen(
     Scaffold(
         bottomBar = {
             NavigationBar {
-                Surface {
-                    
-                }
-                Column(
-                    modifier = Modifier
-                        .width(130.dp)
-                        .align(alignment = Alignment.CenterVertically)
-                        .padding(horizontal = 16.dp),
-                ) {
-                    Text(
-                        text = "Rp. ${item.price.toString()}",
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Black,
-                        color = Color.White
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(alignment = Alignment.CenterVertically)
+                            .padding(horizontal = 16.dp),
+
+                        ) {
+                        Text(
+                            text = "Rp. ${item.price.toString()}",
+                            textAlign = TextAlign.Center,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Black
+                        )
+                    }
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = {
+                            buyContent(item.id ?: "")
+                        },
+                        icon = {
+                            Box {
+                                Text(
+                                    text = "Buy Now",
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .wrapContentSize(align = Alignment.CenterEnd)
+                            .padding(start = 30.dp)
                     )
                 }
-                NavigationBarItem(selected = true,
-                    onClick = {
-                        buyContent(item.id ?: "")
-                    },
-                    icon = {
-                        Box {
-                            Text(text = "Buy Now")
-                        }
-                    })
             }
 //            Row(
 //                modifier = Modifier
@@ -157,7 +170,6 @@ fun DetailsScreen(
                 .padding(16.dp)
         ){
             Row(
-
                 verticalAlignment = Alignment.CenterVertically
             ){
                 IconButton(

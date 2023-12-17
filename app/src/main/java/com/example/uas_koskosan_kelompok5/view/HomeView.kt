@@ -64,6 +64,7 @@ fun HomeView(
     Column(
         modifier = Modifier
             .padding(16.dp)
+            .padding(top = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(50.dp))
         Row() {
