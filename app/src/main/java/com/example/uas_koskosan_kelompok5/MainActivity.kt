@@ -75,6 +75,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -386,25 +387,37 @@ class MainActivity : ComponentActivity() {
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp)
             ) {
-                Text("Profile Screen",)
-
-                Button(onClick = {
-                    startActivity(auth)
-                }) {
-                    Text(text = "Login as owner")
+                Button(
+                    onClick = { startActivity(auth) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = "Login as owner",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Button(onClick = {
-                    startActivity(auth)
-                }) {
-                    Text(text = "Login as buyer")
+                Button(
+                    onClick = { startActivity(auth) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = "Login as buyer",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
     }
+
 
 }
 

@@ -77,14 +77,21 @@ fun DetailsScreen(
     Scaffold(
         bottomBar = {
             NavigationBar {
+                Surface {
+                    
+                }
                 Column(
-                    modifier = Modifier.width(130.dp).align(alignment = Alignment.CenterVertically).padding(horizontal = 10.dp),
-
+                    modifier = Modifier
+                        .width(130.dp)
+                        .align(alignment = Alignment.CenterVertically)
+                        .padding(horizontal = 16.dp),
                 ) {
                     Text(
                         text = "Rp. ${item.price.toString()}",
                         textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color.White
                     )
                 }
                 NavigationBarItem(selected = true,

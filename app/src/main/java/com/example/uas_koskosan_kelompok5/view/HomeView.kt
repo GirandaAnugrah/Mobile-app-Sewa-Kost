@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -70,6 +71,17 @@ fun HomeView(
                 value = searchQuery,
                 onValueChange = {
                     searchQuery = it
+                },
+                placeholder = {
+                    Row() {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.padding(end = 10.dp))
+                        Text("Search")
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
