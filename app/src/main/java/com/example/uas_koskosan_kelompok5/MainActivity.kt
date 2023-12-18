@@ -76,6 +76,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -90,9 +91,6 @@ import com.example.uas_koskosan_kelompok5.service.CartService
 import com.example.uas_koskosan_kelompok5.service.TransactionService
 import com.example.uas_koskosan_kelompok5.view.MyKostScreen
 import com.example.uas_koskosan_kelompok5.view.TransactionScreen
-import com.example.uas_koskosan_kelompok5.view.content.DetailsScreen
-import com.example.uas_koskosan_kelompok5.view.transaction.DetailTransactionCustomer
-import java.util.UUID
 
 class MainActivity : ComponentActivity() {
     private var currentUser = Firebase.auth.currentUser
@@ -234,7 +232,7 @@ class MainActivity : ComponentActivity() {
 //                                    } else if(item.hasNews) {
 //                                        Badge()
 //                                    }
-                                    }
+                                    },
                                 ) {
                                     Icon(
                                         imageVector = if (currentRoute == item.itemRoute) {

@@ -50,6 +50,7 @@ fun SellerAcceptScreen(
     updateStatus: (transaction: TransactionModel) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val scrollState2 = rememberScrollState()
     var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -102,7 +103,7 @@ fun SellerAcceptScreen(
 
     Column(
         modifier = Modifier
-            .verticalScroll(enabled = true, state = scrollState)
+            .verticalScroll(enabled = true, state = scrollState2)
             .padding(horizontal = 8.dp)
             .padding(16.dp),
     ) {
@@ -200,6 +201,7 @@ fun SellerAcceptScreen(
         ) {
             Text(text = "Accept")
         }
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 
