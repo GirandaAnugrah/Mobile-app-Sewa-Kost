@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.uas_koskosan_kelompok5.R
 import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.model.FacilitiesModel
 import com.google.firebase.auth.FirebaseUser
@@ -364,7 +366,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.Star,
+                    painter = painterResource(id = R.drawable.icon_bolt),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -378,7 +380,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_bed),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -391,7 +393,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_desk),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -404,7 +406,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_chair),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -417,7 +419,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_cupboard),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -430,7 +432,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_pillow),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit

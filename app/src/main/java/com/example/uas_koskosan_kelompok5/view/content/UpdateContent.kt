@@ -3,6 +3,7 @@ package com.example.uas_koskosan_kelompok5.view.service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,8 @@ import androidx.compose.runtime.LaunchedEffect
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.uas_koskosan_kelompok5.model.ContentModel
@@ -223,6 +226,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bolt),
+                    contentDescription = "Electricity",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Electricity")
                 Checkbox(
                     checked = state.electricity ,
@@ -237,6 +246,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bed),
+                    contentDescription = "Bed",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Bed")
                 Checkbox(
                     checked = state.bed ,
@@ -251,6 +266,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_desk),
+                    contentDescription = "Desk",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Desk")
                 Checkbox(
                     checked = state.desk ,
@@ -265,6 +286,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_cupboard),
+                    contentDescription = "Cupboard",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Cupboard")
                 Checkbox(
                     checked = state.cupboard ,
@@ -279,6 +306,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_pillow),
+                    contentDescription = "Pillow",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Pillow")
                 Checkbox(
                     checked = state.pillow ,
@@ -293,11 +326,17 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_chair),
+                    contentDescription = "Chair",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Chair")
                 Checkbox(
                     checked = state.chair ,
                     onCheckedChange = { newCheckState ->
-                        viewModel.onChairChange(newCheckState)
+                        viewModel.onPillowChange(newCheckState)
                     }
                 )
             }

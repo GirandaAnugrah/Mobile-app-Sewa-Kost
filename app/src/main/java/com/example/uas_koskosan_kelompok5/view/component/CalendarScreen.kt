@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
 import io.github.boguszpawlowski.composecalendar.StaticCalendar
@@ -32,10 +36,18 @@ fun CalendarScreen(addDay:(day: LocalDate) -> Unit) {
 //    var transactionDay by remember { mutableStateOf("") }
     val calendarState = rememberSelectableCalendarState(initialSelectionMode = SelectionMode.Single)
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
     ) {
 //      SelectableWeekCalendar()
-        Text(text = "Select a date to start renting")
+        Text(
+            text = "Select a date to start renting",
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+        )
+
         SelectableCalendar(
             calendarState = calendarState,
         )
