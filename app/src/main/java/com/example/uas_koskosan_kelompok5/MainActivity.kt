@@ -68,10 +68,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.List
@@ -81,6 +84,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -184,9 +188,15 @@ class MainActivity : ComponentActivity() {
                         .padding(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Row {
+                        Image(painter = painterResource(
+                            id = R.drawable.logo_bulet),
+                            contentDescription = null,
+                            modifier = Modifier.width(50.dp).height(50.dp)
+                        )
                         Text(
                             text = "REKOST",
+                            modifier = Modifier.padding(top = 6.dp),
                             fontSize = 23.sp,
                             fontWeight = FontWeight.SemiBold,
                         )
