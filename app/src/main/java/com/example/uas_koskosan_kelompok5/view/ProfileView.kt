@@ -55,6 +55,7 @@ fun ProfileView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Spacer(modifier = Modifier.height(60.dp))
             ImageProfile(img = firebaseUser.photoUrl.toString())
             DisplayName(username = firebaseUser.displayName.toString())
             DisplayEmail(email = firebaseUser.email.toString())

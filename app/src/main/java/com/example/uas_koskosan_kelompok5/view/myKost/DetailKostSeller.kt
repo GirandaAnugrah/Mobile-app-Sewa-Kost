@@ -116,26 +116,6 @@ fun DetailKostSeller(
 
         data.data?.let { SellerRequestCard(it) }
 
-//        if(!data.payment.isNullOrEmpty()){
-//            Text(text = "Bukti Pembayaran")
-//            AsyncImage(
-//                model = data.payment?.get(0),
-//                contentDescription = null ,
-//                modifier = Modifier
-//                    .height(170.dp)
-//                    .fillMaxWidth(),
-//                contentScale = ContentScale.Crop
-//            )
-//        }
-
-    }
-
-    Column(
-        modifier = Modifier
-            .verticalScroll(enabled = true, state = scrollState)
-            .padding(horizontal = 8.dp)
-            .padding(start = 16.dp, top = 8.dp, bottom = 16.dp, end = 16.dp),
-    ) {
         Column {
             Row(
                 modifier = Modifier
@@ -316,5 +296,18 @@ fun DetailKostSeller(
                 Text(text = "Delete")
             }
         }
+
+//        if(!data.payment.isNullOrEmpty()){
+//            Text(text = "Bukti Pembayaran")
+//            AsyncImage(
+//                model = data.payment?.get(0),
+//                contentDescription = null ,
+//                modifier = Modifier
+//                    .height(170.dp)
+//                    .fillMaxWidth(),
+//                contentScale = ContentScale.Crop
+//            )
+//        }
+
     }
 }
