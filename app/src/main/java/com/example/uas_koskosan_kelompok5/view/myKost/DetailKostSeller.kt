@@ -253,16 +253,25 @@ fun DetailKostSeller(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {
-                Text(text = "Transfer")
-                for (dt in data.paymentHistory!!) {
-                    Text(
-                        text = "BCA $dt ${data.data?.price.toString()}",
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(start = 8.dp)
-                            .wrapContentWidth(Alignment.End)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    for (dt in data.paymentHistory!!) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 15.dp)
+                        ) {
+                            Text(text = "BCA $dt")
+                            Text(
+                                text = data.data?.price.toString(),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .wrapContentWidth(Alignment.End)
+                            )
+                        }
+                    }
                 }
             }
             if (question) {

@@ -230,7 +230,7 @@ fun CalculatePrice(content: ContentModel, priceAdmin: Int, priceTotal: Int) {
 fun ImageDataCard(viewModel: TransactionViewModel,state: TransactionState) {
     Text(
         modifier = Modifier
-            .padding(top = 16.dp),
+            .padding(top = 16.dp, bottom = 16.dp),
         text = "Foto KTP",
         style = TextStyle(
             fontSize = 20.sp,

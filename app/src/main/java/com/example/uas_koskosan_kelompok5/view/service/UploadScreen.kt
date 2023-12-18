@@ -3,6 +3,7 @@ package com.example.uas_koskosan_kelompok5.view.service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,9 +46,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.OutlinedTextField
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.uas_koskosan_kelompok5.view.component.ProgressLoadingScreen
@@ -67,7 +71,8 @@ fun UploadScreen(
     Column(
         modifier = Modifier
             .verticalScroll(enabled = true, state = scrollState)
-            .padding(24.dp)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val multiplePhotoPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
@@ -91,7 +96,7 @@ fun UploadScreen(
         ) {
             Text("Pick Multiple Images")
         }
-        TextField(value = state.title.orEmpty(),
+        OutlinedTextField(value = state.title.orEmpty(),
             onValueChange = {title ->
                 viewModel.onTitleChange(title)
             },
@@ -121,7 +126,7 @@ fun UploadScreen(
         DropdownMenuExample(viewModel = viewModel)
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
+        OutlinedTextField(
             value = state.description.orEmpty(),
             onValueChange = {desc ->
                 viewModel.onDescriptionChange(desc)
@@ -172,102 +177,137 @@ fun ListFacilities(viewModel: ContentViewModel,state: ContentState) {
 
 //    val checkboxItems = viewModel.checkboxItems
 
-    Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Electricity")
-                        Checkbox(
-                            checked = state.electricity ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onElectricityChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Bed")
-                        Checkbox(
-                            checked = state.bed ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onBedChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Desk")
-                        Checkbox(
-                            checked = state.desk ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onDeskChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Cupboard")
-                        Checkbox(
-                            checked = state.cupboard ,
-                            onCheckedChange = { newCheckState ->
-                                viewModel.onCupboardChange(newCheckState)
-                            }
-                        )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Pillow")
-                    Checkbox(
-                        checked = state.pillow ,
-                        onCheckedChange = { newCheckState ->
-                            viewModel.onPillowChange(newCheckState)
-                        }
-                    )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    Text(text = "Chair")
-                    Checkbox(
-                        checked = state.chair ,
-                        onCheckedChange = { newCheckState ->
-                            viewModel.onChairChange(newCheckState)
-                        }
-                    )
-                }
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bolt),
+                    contentDescription = "Electricity",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Electricity")
+                Checkbox(
+                    checked = state.electricity ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onElectricityChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bed),
+                    contentDescription = "Bed",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Bed")
+                Checkbox(
+                    checked = state.bed ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onBedChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_desk),
+                    contentDescription = "Desk",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Desk")
+                Checkbox(
+                    checked = state.desk ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onDeskChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_cupboard),
+                    contentDescription = "Cupboard",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Cupboard")
+                Checkbox(
+                    checked = state.cupboard ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onCupboardChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_pillow),
+                    contentDescription = "Pillow",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Pillow")
+                Checkbox(
+                    checked = state.pillow ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onPillowChange(newCheckState)
+                    }
+                )
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_chair),
+                    contentDescription = "Chair",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(text = "Chair")
+                Checkbox(
+                    checked = state.chair ,
+                    onCheckedChange = { newCheckState ->
+                        viewModel.onChairChange(newCheckState)
+                    }
+                )
+            }
+        )
 
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressScreen(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.address.orEmpty(),
+    OutlinedTextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -280,7 +320,7 @@ fun AddressScreen(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.telp.orEmpty(),
+    OutlinedTextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -292,7 +332,7 @@ fun TelpScreen(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreen(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.price.toString(),
+    OutlinedTextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         modifier = Modifier
             .fillMaxWidth(),

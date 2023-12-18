@@ -88,8 +88,7 @@ fun HomeView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                    .clip(MaterialTheme.shapes.small))
+            )
         }
 
         LazyVerticalGrid(

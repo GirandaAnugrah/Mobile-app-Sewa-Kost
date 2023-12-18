@@ -15,6 +15,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -74,7 +75,7 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TextField(value = username,
+        OutlinedTextField(value = username,
             onValueChange = {
                 username = it
                 isUsernameError = false
@@ -85,14 +86,12 @@ fun SignUpScreen(
             isError = isUsernameError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small))
+                .padding(8.dp))
         if (isUsernameError){
             Text(text = messageusernameError)
         }
 
-        TextField(value = email,
+        OutlinedTextField(value = email,
             onValueChange = {
                 email = it
                 isEmailError = false
@@ -104,8 +103,6 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small)
         )
         if(error!!.isNotBlank()){
             error?.let {
@@ -134,7 +131,7 @@ fun SignUpScreen(
             )
         }
 
-        TextField(value = password,
+        OutlinedTextField(value = password,
             onValueChange = {
                 password = it
                 isErrorPassword = false
@@ -146,14 +143,12 @@ fun SignUpScreen(
             isError = isErrorPassword,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small))
+                .padding(8.dp))
         if (isErrorPassword){
             Text(text = messagepasswordNotSame)
         }
 
-        TextField(value = secondPassword,
+        OutlinedTextField(value = secondPassword,
             onValueChange = {
                 secondPassword = it
                 isErrorPassword = false
@@ -165,9 +160,7 @@ fun SignUpScreen(
             isError = isErrorPassword,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small))
+                .padding(8.dp))
         if (isErrorPassword){
             Text(text = messagepasswordNotSame)
         }
