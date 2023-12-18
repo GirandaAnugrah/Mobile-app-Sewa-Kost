@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -57,7 +58,7 @@ fun MyKostScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 text = "My Kost", fontWeight = FontWeight.Bold,
@@ -68,7 +69,7 @@ fun MyKostScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .background(Color.White)
+                    .background(Color.White),
             ) {
                 itemsIndexed(sortedItems){index, item ->
                     item.data?.let {
@@ -105,7 +106,9 @@ fun MyKostCard(
         )
 
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Card(
                 shape = RoundedCornerShape(8.dp),
                 elevation = CardDefaults.cardElevation(

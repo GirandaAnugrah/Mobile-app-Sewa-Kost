@@ -1,6 +1,7 @@
 package com.example.uas_koskosan_kelompok5.view.content
 
 import android.annotation.SuppressLint
+import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,6 +81,10 @@ fun DetailsScreen(
 ) {
     var question by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
+    val onBackPressedDispatcher = (context as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -171,23 +177,29 @@ fun DetailsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ){
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                IconButton(
-                    onClick = {
-                        //
-                    }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-                Text(
-                    text = "Back",
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable {
-                        //
+                    IconButton(
+                        onClick = {
+                            onBackPressedDispatcher?.onBackPressed()
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                )
+                    Text(
+                        text = "Back",
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onBackPressedDispatcher?.onBackPressed()
+                        }
+                    )
+                }
             }
 
             LazyRow(

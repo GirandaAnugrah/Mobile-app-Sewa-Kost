@@ -51,6 +51,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
@@ -141,7 +142,7 @@ fun UpdateContent(
         ) {
             Text("Pick Multiple Images")
         }
-        TextField(value = state.title ?: "",
+        OutlinedTextField(value = state.title ?: "",
             onValueChange = {title ->
                 viewModel.onTitleChange(title)
             },
@@ -172,7 +173,7 @@ fun UpdateContent(
         DropdownMenuExampleUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
+        OutlinedTextField(
             value = state.description.orEmpty(),
             onValueChange = {desc ->
                 viewModel.onDescriptionChange(desc)
@@ -348,7 +349,7 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.address.orEmpty(),
+    OutlinedTextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -360,7 +361,7 @@ fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.telp.orEmpty(),
+    OutlinedTextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -373,7 +374,7 @@ fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 @Composable
 fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 //    var price by remember { mutableStateOf(0.0) }
-    TextField(value = state.price.toString(),
+    OutlinedTextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier
