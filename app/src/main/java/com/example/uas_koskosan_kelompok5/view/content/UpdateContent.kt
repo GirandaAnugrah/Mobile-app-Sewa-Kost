@@ -3,6 +3,7 @@ package com.example.uas_koskosan_kelompok5.view.service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,10 +46,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.uas_koskosan_kelompok5.model.ContentModel
@@ -78,6 +87,31 @@ fun UpdateContent(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = {
+                        //
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+                Text(
+                    text = "Back",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        //
+                    }
+                )
+            }
+        }
+
         val multiplePhotoPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = {
@@ -108,7 +142,7 @@ fun UpdateContent(
         ) {
             Text("Pick Multiple Images")
         }
-        TextField(value = state.title ?: "",
+        OutlinedTextField(value = state.title ?: "",
             onValueChange = {title ->
                 viewModel.onTitleChange(title)
             },
@@ -139,7 +173,7 @@ fun UpdateContent(
         DropdownMenuExampleUpdate(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
+        OutlinedTextField(
             value = state.description.orEmpty(),
             onValueChange = {desc ->
                 viewModel.onDescriptionChange(desc)
@@ -193,6 +227,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bolt),
+                    contentDescription = "Electricity",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Electricity")
                 Checkbox(
                     checked = state.electricity ,
@@ -207,6 +247,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_bed),
+                    contentDescription = "Bed",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Bed")
                 Checkbox(
                     checked = state.bed ,
@@ -221,6 +267,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_desk),
+                    contentDescription = "Desk",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Desk")
                 Checkbox(
                     checked = state.desk ,
@@ -235,6 +287,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_cupboard),
+                    contentDescription = "Cupboard",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Cupboard")
                 Checkbox(
                     checked = state.cupboard ,
@@ -249,6 +307,12 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_pillow),
+                    contentDescription = "Pillow",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Pillow")
                 Checkbox(
                     checked = state.pillow ,
@@ -263,11 +327,17 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             content = {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_chair),
+                    contentDescription = "Chair",
+                    modifier = Modifier.size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
                 Text(text = "Chair")
                 Checkbox(
                     checked = state.chair ,
                     onCheckedChange = { newCheckState ->
-                        viewModel.onChairChange(newCheckState)
+                        viewModel.onPillowChange(newCheckState)
                     }
                 )
             }
@@ -279,7 +349,7 @@ fun ListFacilitiesUpdate(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.address.orEmpty(),
+    OutlinedTextField(value = state.address.orEmpty(),
         onValueChange = {viewModel.onAddressChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -291,7 +361,7 @@ fun AddressScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
-    TextField(value = state.telp.orEmpty(),
+    OutlinedTextField(value = state.telp.orEmpty(),
         onValueChange = {viewModel.onTelpChange(it)},
         modifier = Modifier
             .fillMaxWidth(),
@@ -304,7 +374,7 @@ fun TelpScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 @Composable
 fun PriceScreenUpdate(viewModel: ContentViewModel,state: ContentState) {
 //    var price by remember { mutableStateOf(0.0) }
-    TextField(value = state.price.toString(),
+    OutlinedTextField(value = state.price.toString(),
         onValueChange = {viewModel.onPriceChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier

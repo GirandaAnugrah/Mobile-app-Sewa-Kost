@@ -20,9 +20,9 @@
         <activity
             android:name=".CustomerTransactionActivity"
             android:exported="false" />
-        <activity
-            android:name=".CustomerTransaction"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".CustomerTransaction"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".DetailActivity"
             android:exported="false" />

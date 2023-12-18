@@ -1,6 +1,7 @@
 package com.example.uas_koskosan_kelompok5.view.content
 
 import android.annotation.SuppressLint
+import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,9 +47,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.uas_koskosan_kelompok5.R
 import com.example.uas_koskosan_kelompok5.model.ContentModel
 import com.example.uas_koskosan_kelompok5.model.FacilitiesModel
 import com.google.firebase.auth.FirebaseUser
@@ -74,28 +81,49 @@ fun DetailsScreen(
 ) {
     var question by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
+    val onBackPressedDispatcher = (context as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher
+
     Scaffold(
         bottomBar = {
             NavigationBar {
-                Column(
-                    modifier = Modifier.width(130.dp).align(alignment = Alignment.CenterVertically).padding(horizontal = 10.dp),
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(alignment = Alignment.CenterVertically)
+                            .padding(horizontal = 16.dp),
 
-                ) {
-                    Text(
-                        text = "Rp. ${item.price.toString()}",
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
+                        ) {
+                        Text(
+                            text = "Rp. ${item.price.toString()}",
+                            textAlign = TextAlign.Center,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Black
+                        )
+                    }
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = {
+                            buyContent(item.id ?: "")
+                        },
+                        icon = {
+                            Box {
+                                Text(
+                                    text = "Buy Now",
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .wrapContentSize(align = Alignment.CenterEnd)
+                            .padding(start = 30.dp)
                     )
                 }
-                NavigationBarItem(selected = true,
-                    onClick = {
-                        buyContent(item.id ?: "")
-                    },
-                    icon = {
-                        Box {
-                            Text(text = "Buy Now")
-                        }
-                    })
             }
 //            Row(
 //                modifier = Modifier
@@ -149,24 +177,29 @@ fun DetailsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ){
-            Row(
-
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                IconButton(
-                    onClick = {
-                        //
-                    }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-                Text(
-                    text = "Back",
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable {
-                        //
+                    IconButton(
+                        onClick = {
+                            onBackPressedDispatcher?.onBackPressed()
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                )
+                    Text(
+                        text = "Back",
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onBackPressedDispatcher?.onBackPressed()
+                        }
+                    )
+                }
             }
 
             LazyRow(
@@ -345,7 +378,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.Star,
+                    painter = painterResource(id = R.drawable.icon_bolt),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -359,7 +392,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_bed),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -372,7 +405,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_desk),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -385,7 +418,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_chair),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -398,7 +431,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_cupboard),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit
@@ -411,7 +444,7 @@ fun ListFacility(facilities: FacilitiesModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    imageVector = Icons.Default.ThumbUp,
+                    painter = painterResource(id = R.drawable.icon_pillow),
                     contentDescription = "Kasur",
                     modifier = Modifier.size(24.dp),
                     contentScale = ContentScale.Fit

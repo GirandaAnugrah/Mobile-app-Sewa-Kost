@@ -62,7 +62,6 @@ fun LoginScreen(
                 .clip(MaterialTheme.shapes.medium)
         )
 
-
         Text(
             text = "LOGIN",
             style = LocalTextStyle.current.copy(
@@ -71,7 +70,7 @@ fun LoginScreen(
             )
         )
 
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = {
                 email = it
@@ -82,11 +81,9 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small)
         )
 
-        TextField(
+        OutlinedTextField(
             value = password,
             onValueChange = {
                 password = it
@@ -98,8 +95,6 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                .clip(MaterialTheme.shapes.small)
         )
 
         Button(

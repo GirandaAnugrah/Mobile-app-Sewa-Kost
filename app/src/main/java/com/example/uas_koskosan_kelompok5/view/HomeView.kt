@@ -18,10 +18,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -63,19 +65,30 @@ fun HomeView(
     Column(
         modifier = Modifier
             .padding(16.dp)
+            .padding(top = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(60.dp))
         Row() {
-            TextField(
+            OutlinedTextField(
                 value = searchQuery,
                 onValueChange = {
                     searchQuery = it
                 },
+                placeholder = {
+                    Row() {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.padding(end = 10.dp))
+                        Text("Search")
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)) // Adjust alpha as needed
-                    .clip(MaterialTheme.shapes.small))
+            )
         }
 
         LazyVerticalGrid(
