@@ -54,10 +54,11 @@ fun LoginScreen(
         }
 
         Image(
-            painter = painterResource(id = R.drawable.apartement_sample),
+            painter = painterResource(id = R.drawable.logo_tulisan_2),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth() // Adjust the maximum width as needed
+                .width(310.dp)
+                .height(200.dp)
                 .padding(bottom = 16.dp)
                 .clip(MaterialTheme.shapes.medium)
         )
