@@ -174,23 +174,29 @@ fun SellerAcceptScreen(
                         .wrapContentWidth(Alignment.End)
                 )
             }
+
             Row(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {
                 Text(text = "Foto KTP")
             }
+
+            Row {
+                AsyncImage(
+                    model = data.cardIdentity?.get(0),
+                    contentDescription = null ,
+                    modifier = Modifier
+                        .height(170.dp)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
-        AsyncImage(
-            model = data.cardIdentity?.get(0),
-            contentDescription = null ,
-            modifier = Modifier
-                .height(170.dp)
-                .fillMaxWidth(),
-            contentScale = ContentScale.Crop
-        )
 
         ProgressLoadingScreen(isLoading = isLoading)
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
             updateStatus(data)
@@ -204,8 +210,6 @@ fun SellerAcceptScreen(
         Spacer(modifier = Modifier.height(30.dp))
     }
 }
-
-
 
 @Composable
 fun SellerRequestCard(item: ContentModel) {

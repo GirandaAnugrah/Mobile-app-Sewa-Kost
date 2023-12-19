@@ -1,5 +1,6 @@
 package com.example.uas_koskosan_kelompok5.view.service
 
+import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,6 +58,7 @@ import com.example.uas_koskosan_kelompok5.state.ContentState
 import com.example.uas_koskosan_kelompok5.viewmodel.ContentViewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -81,6 +83,10 @@ fun UpdateContent(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     var title by remember { mutableStateOf(state.title) }
+
+    val context = LocalContext.current
+    val onBackPressedDispatcher = (context as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher
+
     Column(
         modifier = Modifier
             .verticalScroll(enabled = true, state = scrollState)
@@ -97,7 +103,7 @@ fun UpdateContent(
             ) {
                 IconButton(
                     onClick = {
-                        //
+                        onBackPressedDispatcher?.onBackPressed()
                     }
                 ) {
                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
@@ -106,11 +112,20 @@ fun UpdateContent(
                     text = "Back",
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
-                        //
+                        onBackPressedDispatcher?.onBackPressed()
                     }
                 )
             }
         }
+
+        Text(
+            text = "Update Content",
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            fontSize = 22.sp
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         val multiplePhotoPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),

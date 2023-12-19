@@ -91,27 +91,7 @@ fun DetailTransactionCustomer(
 
         Spacer(modifier = Modifier.height(20.dp))
         data.data?.let { SellerRequestCard(it) }
-        if(!data.payment.isNullOrEmpty()){
-            Text(text = "Bukti Pembayaran")
-            Spacer(modifier = Modifier.height(20.dp))
-            AsyncImage(
-                model = data.payment?.get(0),
-                contentDescription = null ,
-                modifier = Modifier
-                    .height(170.dp)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-        }
-//        ProgressLoadingScreen(isLoading = isLoading)
-    }
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(enabled = true, state = scrollState)
-            .padding(horizontal = 8.dp)
-            .padding(start = 16.dp, top = 8.dp, bottom = 16.dp, end = 16.dp),
-    ) {
         Column {
             Row(
                 modifier = Modifier
@@ -197,6 +177,11 @@ fun DetailTransactionCustomer(
                     .padding(bottom = 16.dp)
             ){
                 Text(text = "KTP")
+            }
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+            ){
                 AsyncImage(
                     model = data.cardIdentity?.get(0) ?: "https://firebasestorage.googleapis.com/v0/b/uas-koskosan-kelompok5.appspot.com/o/images%2F8bacd7dd-47bd-4370-ae5d-bd0f7fee6ea7.jpg?alt=media&token=73b3103c-ac42-4052-af36-bfeae27f9e7e",
                     contentDescription = null ,
@@ -206,7 +191,26 @@ fun DetailTransactionCustomer(
                     contentScale = ContentScale.Crop
                 )
             }
-
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+            ){
+                Text(text = "Bukti Pembayaran")
+            }
         }
+
+        if(!data.payment.isNullOrEmpty()){
+            Text(text = "Bukti Pembayaran")
+            Spacer(modifier = Modifier.height(20.dp))
+            AsyncImage(
+                model = data.payment?.get(0),
+                contentDescription = null ,
+                modifier = Modifier
+                    .height(170.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+        }
+//        ProgressLoadingScreen(isLoading = isLoading)
     }
 }
