@@ -7,3 +7,5 @@ Kelompok 5
 2. Renfred Leeman (00000056836)
 3. Hansen (00000060325)
 4. Marselino Lengyu Pantouw (00000061909)
+
+Link App: https://play.google.com/store/apps/details?id=com.rekost.uasKoskosanKelompok5
